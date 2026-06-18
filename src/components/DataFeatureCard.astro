@@ -1,0 +1,26 @@
+---
+import type { DataProjectEntry } from "@lib/content";
+import { projectUrl } from "@lib/content";
+
+interface Props {
+  project: DataProjectEntry;
+}
+
+const { project } = Astro.props;
+const heights = [54, 78, 38, 92, 66];
+---
+
+<a class="data-feature-card" href={projectUrl(project)}>
+  <div>
+    <p class="eyebrow">Featured project</p>
+    <h3>{project.data.title}</h3>
+    <p>{project.data.summary || "A practical analytics project with business context."}</p>
+  </div>
+  <div class="mini-dashboard" aria-hidden="true">
+    {
+      (project.data.metrics.length ? project.data.metrics : heights).map((_, index) => (
+        <span style={`--h: ${heights[index % heights.length]}%`}></span>
+      ))
+    }
+  </div>
+</a>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { site } from "@lib/site";
+---
+
+<BaseLayout title="Contact" description="Contact Keith for photography, content, data analytics, and collaboration enquiries." active="contact">
+  <section class="contact-page" aria-labelledby="contact-title">
+    <p class="eyebrow">Contact</p>
+    <h1 id="contact-title">Let's keep it direct.</h1>
+    <p>For corporate event coverage, content work, analytics projects, or collaborations, reach me through WhatsApp or Gmail.</p>
+    <div class="contact-card-grid">
+      <a class="contact-card" href={site.whatsappUrl}>
+        <span class="meta-label">WhatsApp</span>
+        <strong>{site.whatsapp}</strong>
+        <small>Best for quick project enquiries and event availability.</small>
+        <span class="contact-link-label">Open WhatsApp</span>
+      </a>
+      <a class="contact-card" href={`mailto:${site.email}`}>
+        <span class="meta-label">Gmail</span>
+        <strong>{site.email}</strong>
+        <small>Best for briefs, attachments, references, and longer context.</small>
+        <span class="contact-link-label">Send email</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

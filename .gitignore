@@ -1,0 +1,10 @@
+node_modules/
+.npm-cache/
+.astro/
+dist/
+inbox/
+.env
+.env.*
+.portfolio-auth/
+.google-auth/
+.DS_Store

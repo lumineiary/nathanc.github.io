@@ -1,0 +1,33 @@
+---
+import { site } from "@lib/site";
+
+interface Props {
+  active?: "home" | "photography" | "data" | "contact";
+}
+
+const { active = "home" } = Astro.props;
+const navItems = [
+  { id: "photography", href: "/photography/", label: "Photography" },
+  { id: "data", href: "/data/", label: "Data" },
+  { id: "contact", href: "/contact/", label: "Contact" }
+] as const;
+---
+
+<header class="site-header" aria-label="Site header">
+  <a class="brand" href="/" aria-label="Home">
+    <span class="brand-mark">K</span>
+    <span>
+      <strong>{site.name}</strong>
+      <small>Photography / Data</small>
+    </span>
+  </a>
+  <nav class="nav" aria-label="Primary navigation">
+    {
+      navItems.map((item) => (
+        <a href={item.href} aria-current={active === item.id ? "page" : undefined}>
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+</header>

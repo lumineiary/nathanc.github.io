@@ -1,0 +1,34 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import WorkGrid from "@components/WorkGrid.astro";
+import { published } from "@lib/content";
+import { entrySlug } from "@lib/content";
+import { getGalleryCover } from "@lib/gallery-images";
+
+const photos = published(await getCollection("photography"));
+const pageCover = photos[0] ? getGalleryCover(entrySlug(photos[0]), photos[0].data.coverImage, photos[0].data.images) : "";
+---
+
+<BaseLayout title="Photography" description="Corporate event photography portfolio with scalable gallery listings." active="photography" image={pageCover}>
+  <section class="page-hero photography-page-hero" aria-labelledby="photography-title">
+    <p class="eyebrow">Photography showcase</p>
+    <h1 id="photography-title">Corporate events presented with restraint.</h1>
+    <p>Clean off-white space, consistent sans-serif typography, and galleries that preserve the natural shape of each image.</p>
+  </section>
+
+  <section class="gallery-index-section" aria-labelledby="gallery-index-title">
+    <div class="gallery-heading">
+      <p class="eyebrow">All published galleries</p>
+      <h2 id="gallery-index-title">Corporate and event work.</h2>
+      <p>Add more galleries through Markdown files or the local importer; this page expands automatically.</p>
+    </div>
+    <WorkGrid items={photos} />
+  </section>
+
+  <section class="page-cta" aria-labelledby="photo-contact-title">
+    <h2 id="photo-contact-title">Need corporate event coverage?</h2>
+    <p>Reach out for conferences, panels, networking events, or content packages.</p>
+    <a class="button button-dark" href="/contact/">Contact me</a>
+  </section>
+</BaseLayout>

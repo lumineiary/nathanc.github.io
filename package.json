@@ -1,0 +1,27 @@
+{
+  "name": "photographer-data-analyst-portfolio",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "npm run validate && ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "validate": "ASTRO_TELEMETRY_DISABLED=1 astro check && node scripts/validate-content.mjs",
+    "import": "node importer/server.mjs",
+    "import:magic": "node scripts/import-magic-directory.mjs",
+    "prebuild": "node scripts/import-magic-directory.mjs",
+    "sample-assets": "node scripts/create-sample-assets.mjs",
+    "check": "npm run validate"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^4.3.0",
+    "astro": "^5.10.1",
+    "gray-matter": "^4.0.3",
+    "justified-layout": "^4.1.0",
+    "sharp": "^0.33.5",
+    "typescript": "^5.5.4",
+    "yaml": "^2.5.0"
+  }
+}

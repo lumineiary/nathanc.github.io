@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import WorkGrid from "@components/WorkGrid.astro";
+import { entrySlug, published } from "@lib/content";
+import { getGalleryCover } from "@lib/gallery-images";
+
+const photos = published(await getCollection("photography")).filter((item) => item.data.section === "corporate-events");
+const pageCover = photos[0] ? getGalleryCover(entrySlug(photos[0]), photos[0].data.coverImage, photos[0].data.images) : "";
+---
+
+<BaseLayout title="Corporate Event Photography" description="Published corporate event photography galleries." active="photography" image={pageCover}>
+  <section class="page-hero photography-page-hero" aria-labelledby="corporate-events-title">
+    <p class="eyebrow">Corporate events</p>
+    <h1 id="corporate-events-title">Coverage for conferences, panels, and branded moments.</h1>
+    <p>A focused listing of published corporate-event work, generated automatically from the photography content collection.</p>
+  </section>
+
+  <section class="gallery-index-section" aria-labelledby="corporate-events-list-title">
+    <div class="gallery-heading">
+      <p class="eyebrow">Published galleries</p>
+      <h2 id="corporate-events-list-title">Corporate event archive.</h2>
+    </div>
+    <WorkGrid items={photos} />
+  </section>
+</BaseLayout>

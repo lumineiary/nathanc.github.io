@@ -1,0 +1,22 @@
+---
+import type { DataProjectEntry } from "@lib/content";
+import { projectUrl } from "@lib/content";
+
+interface Props {
+  projects: DataProjectEntry[];
+}
+
+const { projects } = Astro.props;
+---
+
+<div class="project-list-grid">
+  {
+    projects.map((project) => (
+      <a class="project-list-card" href={projectUrl(project)}>
+        <p class="eyebrow">{project.data.tools.slice(0, 2).join(" / ") || "Data project"}</p>
+        <h3>{project.data.title}</h3>
+        <p>{project.data.summary || "A practical analytics project with business context."}</p>
+      </a>
+    ))
+  }
+</div>

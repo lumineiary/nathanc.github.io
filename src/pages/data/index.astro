@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ProjectGrid from "@components/ProjectGrid.astro";
+import { published } from "@lib/content";
+
+const projects = published(await getCollection("data-projects"));
+---
+
+<BaseLayout title="Data" description="Data analyst project showcase with scalable project listings." active="data" image={projects[0]?.data.coverImage}>
+  <section class="page-hero data-page-hero" aria-labelledby="data-title">
+    <p class="eyebrow">Data analyst showcase</p>
+    <h1 id="data-title">Analytics projects with business context.</h1>
+    <p>A separate space for technical case studies, dashboards, methodology, and measurable outcomes.</p>
+  </section>
+
+  <section class="data-showcase" aria-labelledby="data-projects-title">
+    <div class="gallery-heading">
+      <p class="eyebrow">All published projects</p>
+      <h2 id="data-projects-title">Technical proof of work.</h2>
+      <p>Add more projects through Markdown or MDX files; this page keeps expanding automatically.</p>
+    </div>
+    <ProjectGrid projects={projects} />
+  </section>
+
+  <section class="page-cta" aria-labelledby="data-contact-title">
+    <h2 id="data-contact-title">Interested in the technical side?</h2>
+    <p>Contact me for analytics, automation, or portfolio-related collaborations.</p>
+    <a class="button button-dark" href="/contact/">Contact me</a>
+  </section>
+</BaseLayout>

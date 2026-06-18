@@ -1,0 +1,67 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import JustifiedGallery from "@components/JustifiedGallery.astro";
+import WorkGrid from "@components/WorkGrid.astro";
+import { clientLabel, entrySlug, formatDate, published } from "@lib/content";
+import { getGalleryCover, getGalleryImages } from "@lib/gallery-images";
+
+export async function getStaticPaths() {
+  const photos = published(await getCollection("photography"));
+  return photos.map((item) => ({ params: { slug: entrySlug(item) }, props: { item } }));
+}
+
+const { item } = Astro.props;
+const { Content } = await item.render();
+const photos = published(await getCollection("photography"));
+const related = photos.filter((photo) => entrySlug(photo) !== entrySlug(item)).slice(0, 2);
+const client = clientLabel(item);
+const slug = entrySlug(item);
+const title = item.data.title || entrySlug(item);
+const category = item.data.category || "Photography";
+const date = formatDate(item.data.date);
+const galleryImages = getGalleryImages(slug, item.data.images);
+const coverImage = getGalleryCover(slug, item.data.coverImage, item.data.images);
+---
+
+<BaseLayout title={`${title} / Photography`} description={item.data.summary || item.data.description || "Photography gallery."} active="photography" image={coverImage}>
+  <section class="page-hero photography-page-hero" aria-labelledby="gallery-title">
+    <p class="eyebrow">{category}</p>
+    <h1 id="gallery-title">{title}</h1>
+    <p>{item.data.description || item.data.summary || "A curated public set from this photography project."}</p>
+  </section>
+
+  <section class="gallery-section">
+    <div class="gallery-meta">
+      {date && <div><span class="meta-label">Date</span><strong>{date}</strong></div>}
+      <div><span class="meta-label">Type</span><strong>{category}</strong></div>
+      {client && <div><span class="meta-label">Client</span><strong>{client}</strong></div>}
+      {!client && <div><span class="meta-label">Coverage</span><strong>{item.data.services.slice(0, 2).join(" / ") || "Curated public set"}</strong></div>}
+    </div>
+    {galleryImages.length > 0 ? <JustifiedGallery title={title} images={galleryImages} /> : <p class="empty-gallery-note">No images found for this gallery yet.</p>}
+    <div class="detail-body">
+      <Content />
+      {
+        item.data.services.length > 0 && (
+          <>
+            <h2>Services Delivered</h2>
+            <ul>{item.data.services.map((service) => <li>{service}</li>)}</ul>
+          </>
+        )
+      }
+      {item.data.googlePhotosUrl && <a class="button button-quiet" href={item.data.googlePhotosUrl}>View full client gallery</a>}
+    </div>
+  </section>
+
+  {
+    related.length > 0 && (
+      <section class="related-section" aria-labelledby="related-title">
+        <div class="gallery-heading">
+          <p class="eyebrow">Related work</p>
+          <h2 id="related-title">More event coverage</h2>
+        </div>
+        <WorkGrid items={related} />
+      </section>
+    )
+  }
+</BaseLayout>

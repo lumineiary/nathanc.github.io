@@ -1,0 +1,25 @@
+---
+import type { PhotographyEntry } from "@lib/content";
+import { entrySlug, galleryUrl } from "@lib/content";
+import { getGalleryCover } from "@lib/gallery-images";
+
+interface Props {
+  item: PhotographyEntry;
+  large?: boolean;
+}
+
+const { item, large = false } = Astro.props;
+const slug = entrySlug(item);
+const cover = getGalleryCover(slug, item.data.coverImage, item.data.images);
+const title = item.data.title || item.id.replace(/\.(md|mdx)$/, "");
+const category = item.data.category || "Photography";
+---
+
+<a class:list={["work-card", { "large-work-card": large }]} href={galleryUrl(item)}>
+  {cover && <img src={cover} alt={title} loading="lazy" />}
+  <div>
+    <span class="meta-label">{category}</span>
+    <strong>{title}</strong>
+    <p>{item.data.summary || item.data.description || "Curated photography coverage."}</p>
+  </div>
+</a>

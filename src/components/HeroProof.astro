@@ -1,0 +1,57 @@
+---
+import type { DataProjectEntry, PhotographyEntry } from "@lib/content";
+import { galleryUrl, projectUrl } from "@lib/content";
+import { entrySlug } from "@lib/content";
+import { getGalleryCover } from "@lib/gallery-images";
+
+interface Props {
+  photos: PhotographyEntry[];
+  projects: DataProjectEntry[];
+}
+
+const { photos, projects } = Astro.props;
+const firstPhoto = photos[0];
+const secondPhoto = photos[1] || photos[0];
+const firstProject = projects[0];
+const firstCover = firstPhoto ? getGalleryCover(entrySlug(firstPhoto), firstPhoto.data.coverImage, firstPhoto.data.images) : "";
+const secondCover = secondPhoto ? getGalleryCover(entrySlug(secondPhoto), secondPhoto.data.coverImage, secondPhoto.data.images) : "";
+---
+
+<div class="hero-proof-grid" aria-label="Portfolio preview">
+  {
+    firstPhoto && (
+      <a class="hero-proof-card image-proof" href={galleryUrl(firstPhoto)}>
+        <img src={firstCover} alt={firstPhoto.data.title} />
+        <span>
+          <small>Photography</small>
+          <strong>Corporate events</strong>
+        </span>
+      </a>
+    )
+  }
+  {
+    firstProject && (
+      <a class="hero-proof-card data-proof" href={projectUrl(firstProject)}>
+        <span class="mini-label">Data</span>
+        <strong>Analytics, dashboards, and automation</strong>
+        <div class="hero-bars" aria-hidden="true">
+          <i style="--h: 44%"></i>
+          <i style="--h: 72%"></i>
+          <i style="--h: 58%"></i>
+          <i style="--h: 86%"></i>
+        </div>
+      </a>
+    )
+  }
+  {
+    secondPhoto && (
+      <a class="hero-proof-card image-proof secondary-proof" href={galleryUrl(secondPhoto)}>
+        <img src={secondCover} alt={secondPhoto.data.title} />
+        <span>
+          <small>Delivery</small>
+          <strong>Client-ready stories</strong>
+        </span>
+      </a>
+    )
+  }
+</div>

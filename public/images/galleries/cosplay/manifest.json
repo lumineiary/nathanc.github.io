@@ -1,0 +1,395 @@
+{
+  "generatedAt": "2026-06-18T09:30:32.269Z",
+  "sourceFiles": [
+    {
+      "name": "2023-08-21_12-33-05_UTC.jpg",
+      "mtimeMs": 1692567184000,
+      "size": 218797,
+      "outputThumb": "image-001-thumb.webp",
+      "outputLarge": "image-001-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-10-02_11-29-05_UTC_1.jpg",
+      "mtimeMs": 1696192144000,
+      "size": 274692,
+      "outputThumb": "image-002-thumb.webp",
+      "outputLarge": "image-002-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-10-02_11-29-05_UTC_2.jpg",
+      "mtimeMs": 1696192144000,
+      "size": 253084,
+      "outputThumb": "image-003-thumb.webp",
+      "outputLarge": "image-003-large.webp",
+      "width": 1440,
+      "height": 1798,
+      "aspectRatio": 0.8009
+    },
+    {
+      "name": "2023-10-05_14-00-01_UTC_1.jpg",
+      "mtimeMs": 1696460400000,
+      "size": 259374,
+      "outputThumb": "image-004-thumb.webp",
+      "outputLarge": "image-004-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-10-05_14-00-01_UTC_2.jpg",
+      "mtimeMs": 1696460400000,
+      "size": 214436,
+      "outputThumb": "image-005-thumb.webp",
+      "outputLarge": "image-005-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-10-05_14-00-01_UTC_3.jpg",
+      "mtimeMs": 1696460400000,
+      "size": 246234,
+      "outputThumb": "image-006-thumb.webp",
+      "outputLarge": "image-006-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-10-05_14-00-01_UTC_4.jpg",
+      "mtimeMs": 1696460400000,
+      "size": 219237,
+      "outputThumb": "image-007-thumb.webp",
+      "outputLarge": "image-007-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-10-06_14-49-42_UTC_1.jpg",
+      "mtimeMs": 1696549782000,
+      "size": 167454,
+      "outputThumb": "image-008-thumb.webp",
+      "outputLarge": "image-008-large.webp",
+      "width": 960,
+      "height": 720,
+      "aspectRatio": 1.3333
+    },
+    {
+      "name": "2023-10-06_14-49-42_UTC_2.jpg",
+      "mtimeMs": 1696549782000,
+      "size": 156888,
+      "outputThumb": "image-009-thumb.webp",
+      "outputLarge": "image-009-large.webp",
+      "width": 1440,
+      "height": 1080,
+      "aspectRatio": 1.3333
+    },
+    {
+      "name": "2023-10-06_14-49-42_UTC_3.jpg",
+      "mtimeMs": 1696549782000,
+      "size": 157399,
+      "outputThumb": "image-010-thumb.webp",
+      "outputLarge": "image-010-large.webp",
+      "width": 1440,
+      "height": 1080,
+      "aspectRatio": 1.3333
+    },
+    {
+      "name": "2023-10-06_14-49-42_UTC_4.jpg",
+      "mtimeMs": 1696549782000,
+      "size": 148198,
+      "outputThumb": "image-011-thumb.webp",
+      "outputLarge": "image-011-large.webp",
+      "width": 1440,
+      "height": 1080,
+      "aspectRatio": 1.3333
+    },
+    {
+      "name": "2023-10-06_14-49-42_UTC_5.jpg",
+      "mtimeMs": 1696549782000,
+      "size": 145865,
+      "outputThumb": "image-012-thumb.webp",
+      "outputLarge": "image-012-large.webp",
+      "width": 1440,
+      "height": 1080,
+      "aspectRatio": 1.3333
+    },
+    {
+      "name": "2023-10-06_14-49-42_UTC_6.jpg",
+      "mtimeMs": 1696549782000,
+      "size": 127690,
+      "outputThumb": "image-013-thumb.webp",
+      "outputLarge": "image-013-large.webp",
+      "width": 962,
+      "height": 724,
+      "aspectRatio": 1.3287
+    },
+    {
+      "name": "2023-10-06_14-49-42_UTC_7.jpg",
+      "mtimeMs": 1696549782000,
+      "size": 72508,
+      "outputThumb": "image-014-thumb.webp",
+      "outputLarge": "image-014-large.webp",
+      "width": 962,
+      "height": 724,
+      "aspectRatio": 1.3287
+    },
+    {
+      "name": "2023-10-06_14-49-42_UTC_8.jpg",
+      "mtimeMs": 1696549782000,
+      "size": 83406,
+      "outputThumb": "image-015-thumb.webp",
+      "outputLarge": "image-015-large.webp",
+      "width": 1440,
+      "height": 1083,
+      "aspectRatio": 1.3296
+    },
+    {
+      "name": "2023-10-07_14-14-28_UTC.jpg",
+      "mtimeMs": 1696634068000,
+      "size": 136346,
+      "outputThumb": "image-016-thumb.webp",
+      "outputLarge": "image-016-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-10-09_12-55-30_UTC.jpg",
+      "mtimeMs": 1696802130000,
+      "size": 101201,
+      "outputThumb": "image-017-thumb.webp",
+      "outputLarge": "image-017-large.webp",
+      "width": 540,
+      "height": 960,
+      "aspectRatio": 0.5625
+    },
+    {
+      "name": "2023-10-12_12-42-54_UTC.jpg",
+      "mtimeMs": 1697060574000,
+      "size": 215001,
+      "outputThumb": "image-018-thumb.webp",
+      "outputLarge": "image-018-large.webp",
+      "width": 540,
+      "height": 960,
+      "aspectRatio": 0.5625
+    },
+    {
+      "name": "2023-10-13_01-53-20_UTC_1.jpg",
+      "mtimeMs": 1697108000000,
+      "size": 127927,
+      "outputThumb": "image-019-thumb.webp",
+      "outputLarge": "image-019-large.webp",
+      "width": 1440,
+      "height": 1079,
+      "aspectRatio": 1.3346
+    },
+    {
+      "name": "2023-10-13_01-53-20_UTC_2.jpg",
+      "mtimeMs": 1697108000000,
+      "size": 172924,
+      "outputThumb": "image-020-thumb.webp",
+      "outputLarge": "image-020-large.webp",
+      "width": 1440,
+      "height": 1080,
+      "aspectRatio": 1.3333
+    },
+    {
+      "name": "2023-10-23_02-07-30_UTC.jpg",
+      "mtimeMs": 1697972850000,
+      "size": 232486,
+      "outputThumb": "image-021-thumb.webp",
+      "outputLarge": "image-021-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-11-24_04-18-37_UTC.jpg",
+      "mtimeMs": 1700741916000,
+      "size": 222967,
+      "outputThumb": "image-022-thumb.webp",
+      "outputLarge": "image-022-large.webp",
+      "width": 1440,
+      "height": 884,
+      "aspectRatio": 1.629
+    },
+    {
+      "name": "2023-11-30_12-51-35_UTC.jpg",
+      "mtimeMs": 1701291094000,
+      "size": 103205,
+      "outputThumb": "image-023-thumb.webp",
+      "outputLarge": "image-023-large.webp",
+      "width": 1440,
+      "height": 960,
+      "aspectRatio": 1.5
+    },
+    {
+      "name": "2023-12-08_08-02-20_UTC_1.jpg",
+      "mtimeMs": 1701964940000,
+      "size": 130953,
+      "outputThumb": "image-024-thumb.webp",
+      "outputLarge": "image-024-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-12-08_08-02-20_UTC_2.jpg",
+      "mtimeMs": 1701964940000,
+      "size": 176733,
+      "outputThumb": "image-025-thumb.webp",
+      "outputLarge": "image-025-large.webp",
+      "width": 1440,
+      "height": 1796,
+      "aspectRatio": 0.8018
+    },
+    {
+      "name": "2023-12-08_21-13-02_UTC.jpg",
+      "mtimeMs": 1702012382000,
+      "size": 530791,
+      "outputThumb": "image-026-thumb.webp",
+      "outputLarge": "image-026-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-12-09_21-02-39_UTC.jpg",
+      "mtimeMs": 1702098158000,
+      "size": 577682,
+      "outputThumb": "image-027-thumb.webp",
+      "outputLarge": "image-027-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-12-17_12-37-37_UTC_1.jpg",
+      "mtimeMs": 1702759056000,
+      "size": 151337,
+      "outputThumb": "image-028-thumb.webp",
+      "outputLarge": "image-028-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2023-12-17_12-37-37_UTC_2.jpg",
+      "mtimeMs": 1702759056000,
+      "size": 186651,
+      "outputThumb": "image-029-thumb.webp",
+      "outputLarge": "image-029-large.webp",
+      "width": 1440,
+      "height": 1791,
+      "aspectRatio": 0.804
+    },
+    {
+      "name": "2024-01-17_15-50-20_UTC.jpg",
+      "mtimeMs": 1705449020000,
+      "size": 356903,
+      "outputThumb": "image-030-thumb.webp",
+      "outputLarge": "image-030-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2024-03-02_07-01-02_UTC.jpg",
+      "mtimeMs": 1709305262000,
+      "size": 836310,
+      "outputThumb": "image-031-thumb.webp",
+      "outputLarge": "image-031-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2024-04-22_13-05-35_UTC_1.jpg",
+      "mtimeMs": 1713737134000,
+      "size": 169865,
+      "outputThumb": "image-032-thumb.webp",
+      "outputLarge": "image-032-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2024-04-22_13-05-35_UTC_2.jpg",
+      "mtimeMs": 1713737134000,
+      "size": 157615,
+      "outputThumb": "image-033-thumb.webp",
+      "outputLarge": "image-033-large.webp",
+      "width": 1440,
+      "height": 1798,
+      "aspectRatio": 0.8009
+    },
+    {
+      "name": "2024-04-22_13-05-35_UTC_3.jpg",
+      "mtimeMs": 1713737134000,
+      "size": 158389,
+      "outputThumb": "image-034-thumb.webp",
+      "outputLarge": "image-034-large.webp",
+      "width": 1440,
+      "height": 1791,
+      "aspectRatio": 0.804
+    },
+    {
+      "name": "2024-05-18_17-40-06_UTC_1.jpg",
+      "mtimeMs": 1716000006000,
+      "size": 180603,
+      "outputThumb": "image-035-thumb.webp",
+      "outputLarge": "image-035-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2024-05-18_17-40-06_UTC_2.jpg",
+      "mtimeMs": 1716000006000,
+      "size": 174824,
+      "outputThumb": "image-036-thumb.webp",
+      "outputLarge": "image-036-large.webp",
+      "width": 1440,
+      "height": 1800,
+      "aspectRatio": 0.8
+    },
+    {
+      "name": "2024-05-18_17-40-06_UTC_3.jpg",
+      "mtimeMs": 1716000006000,
+      "size": 171259,
+      "outputThumb": "image-037-thumb.webp",
+      "outputLarge": "image-037-large.webp",
+      "width": 1440,
+      "height": 1791,
+      "aspectRatio": 0.804
+    },
+    {
+      "name": "2024-07-04_03-55-46_UTC_1.jpg",
+      "mtimeMs": 1720011346000,
+      "size": 303653,
+      "outputThumb": "image-038-thumb.webp",
+      "outputLarge": "image-038-large.webp",
+      "width": 1440,
+      "height": 959,
+      "aspectRatio": 1.5016
+    },
+    {
+      "name": "2024-07-04_03-55-46_UTC_2.jpg",
+      "mtimeMs": 1720011346000,
+      "size": 173695,
+      "outputThumb": "image-039-thumb.webp",
+      "outputLarge": "image-039-large.webp",
+      "width": 1440,
+      "height": 962,
+      "aspectRatio": 1.4969
+    }
+  ]
+}

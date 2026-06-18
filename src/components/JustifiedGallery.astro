@@ -1,0 +1,70 @@
+---
+import Lightbox from "@components/Lightbox.astro";
+
+interface GalleryImage {
+  thumb: string;
+  large: string;
+  width?: number;
+  height?: number;
+  aspectRatio?: number;
+  alt?: string;
+}
+
+interface Props {
+  title: string;
+  images: GalleryImage[];
+}
+
+const { title, images } = Astro.props;
+const renderableImages = images
+  .map((image) => ({
+    ...image,
+    thumb: image.thumb || image.large,
+    large: image.large || image.thumb,
+    aspectRatio: image.aspectRatio || (image.width && image.height ? image.width / image.height : 1.5)
+  }))
+  .filter((image) => image.thumb || image.large);
+const initialImages = renderableImages.slice(0, 30);
+---
+
+<div class="justified-gallery-shell" data-gallery-shell>
+  <div class="justified-gallery" aria-label={`${title} photographs`} data-gallery>
+    {
+      initialImages.map((image, index) => (
+        <button
+          class="shot"
+          style={`--ratio: ${image.aspectRatio || 1.5}`}
+          data-large={image.large}
+          data-index={index}
+          type="button"
+        >
+          <img
+            src={image.thumb}
+            alt={image.alt || title}
+            loading="lazy"
+            width={image.width}
+            height={image.height}
+          />
+        </button>
+      ))
+    }
+  </div>
+  {
+    renderableImages.length > 30 && (
+      <div class="load-more-wrap">
+        <button class="button button-quiet load-more-button" type="button" data-load-more>
+          Load more photographs
+        </button>
+        <p class="load-more-count" data-load-more-count>
+          Showing 30 of {renderableImages.length}
+        </p>
+      </div>
+    )
+  }
+  <script is:inline type="application/json" data-gallery-images set:html={JSON.stringify(renderableImages)} />
+</div>
+
+<Lightbox />
+<script>
+  import "@scripts/gallery.js";
+</script>

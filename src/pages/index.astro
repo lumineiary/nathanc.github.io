@@ -1,0 +1,77 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ContactSection from "@components/ContactSection.astro";
+import DataFeatureCard from "@components/DataFeatureCard.astro";
+import WorkGrid from "@components/WorkGrid.astro";
+import { entrySlug, featured, published } from "@lib/content";
+import { getGalleryCover } from "@lib/gallery-images";
+import { site } from "@lib/site";
+
+const photos = published(await getCollection("photography"));
+const projects = published(await getCollection("data-projects"));
+const latestPhotos = photos.slice(0, 2);
+const featuredProject = featured(projects, 1)[0];
+const pageCover = latestPhotos[0] ? getGalleryCover(entrySlug(latestPhotos[0]), latestPhotos[0].data.coverImage, latestPhotos[0].data.images) : "";
+---
+
+<BaseLayout title={site.title} description={site.description} active="home" image={pageCover}>
+  <section class="home-hero" aria-labelledby="hero-title">
+    <div class="home-hero-copy home-intro-grid">
+      <div class="home-name-block">
+        <h1 id="hero-title">Hi, I'm Keith.</h1>
+      </div>
+      <ul class="identity-list" aria-label="Short description">
+        <li>Corporate event photographer</li>
+        <li>Data analyst</li>
+        <li>Curious Builder</li>
+      </ul>
+      <div class="home-intro-block">
+        <p class="hero-lede">
+          I document business moments with a clean visual eye, then bring the same curiosity
+          to dashboards, analytics, and practical technical systems.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-dark" href="#corporate-work">Find out more</a>
+        </div>
+      </div>
+      {
+        pageCover && (
+          <figure class="home-portrait-card">
+            <img src={pageCover} alt="Featured portfolio image" />
+          </figure>
+        )
+      }
+    </div>
+  </section>
+
+  <section id="corporate-work" class="home-section corporate-work" aria-labelledby="corporate-work-title">
+    <div class="home-section-heading">
+      <p class="eyebrow">Corporate event work</p>
+      <div>
+        <h2 id="corporate-work-title">Recent coverage, built for business contexts.</h2>
+        <p>Conferences, panels, networking sessions, and branded events presented with clean spacing and a restrained visual system.</p>
+      </div>
+      <a class="button button-dark" href="/photography/">Explore photography</a>
+    </div>
+    <WorkGrid items={latestPhotos} />
+  </section>
+
+  {
+    featuredProject && (
+      <section class="home-section data-work" aria-labelledby="data-work-title">
+        <div class="home-section-heading">
+          <p class="eyebrow">Data work</p>
+          <div>
+            <h2 id="data-work-title">Analytics projects with business context.</h2>
+            <p>A separate technical track for dashboards, automation, modelling, and practical data analysis.</p>
+          </div>
+          <a class="button button-dark" href="/data/">Explore data work</a>
+        </div>
+        <DataFeatureCard project={featuredProject} />
+      </section>
+    )
+  }
+
+  <ContactSection />
+</BaseLayout>

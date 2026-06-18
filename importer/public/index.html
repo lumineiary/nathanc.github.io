@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio Importer</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f7f3eb;
+        --ink: #171615;
+        --muted: #67615a;
+        --line: rgba(23, 22, 21, 0.12);
+        --card: rgba(255, 250, 241, 0.66);
+        font-family: ui-rounded, "SF Pro Rounded", "SF Pro Display", Inter, system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--paper); color: var(--ink); font-size: 17px; line-height: 1.45; }
+      main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 46px 0 80px; }
+      h1 { max-width: 760px; margin: 0 0 14px; font-size: clamp(42px, 7vw, 74px); letter-spacing: -2px; line-height: 0.95; }
+      h2 { margin: 0 0 16px; font-size: clamp(28px, 4vw, 44px); letter-spacing: -1px; line-height: 1; }
+      p { color: var(--muted); }
+      section { border-top: 1px solid var(--line); padding: 28px 0; }
+      button, input, textarea, select { font: inherit; }
+      button, .button { display: inline-flex; min-height: 42px; align-items: center; border: 1px solid var(--ink); border-radius: 999px; padding: 0 18px; background: var(--ink); color: #fffaf1; cursor: pointer; text-decoration: none; }
+      button.secondary { border-color: var(--line); background: var(--card); color: var(--ink); }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      label { display: grid; gap: 7px; color: var(--muted); font-size: 0.9rem; font-weight: 700; }
+      input, textarea, select { width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 12px 13px; background: rgba(255, 250, 241, 0.7); color: var(--ink); }
+      textarea { min-height: 110px; resize: vertical; }
+      .full { grid-column: 1 / -1; }
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+      .status { white-space: pre-wrap; border: 1px solid var(--line); border-radius: 16px; padding: 14px; background: var(--card); color: var(--muted); }
+      .images { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 16px; }
+      .image-card { border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--card); }
+      .image-card img { width: 100%; height: 140px; object-fit: cover; display: block; }
+      .image-card div { display: grid; gap: 8px; padding: 10px; }
+      .warnings { color: #8a4b12; }
+      @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>Local-only tool</p>
+      <h1>Google Photos to portfolio gallery.</h1>
+      <p>This importer connects to Google Photos Picker, downloads selected images, creates WebP assets, and saves a Markdown gallery.</p>
+
+      <section>
+        <h2>1. Connect Google Photos</h2>
+        <p id="config" class="status">Checking importer config...</p>
+        <a class="button" href="/auth/start">Connect Google Photos</a>
+      </section>
+
+      <section>
+        <h2>2. Pick Images</h2>
+        <p>Create a picker session, open the Google picker, then return here and load the selected media.</p>
+        <div class="actions">
+          <button id="createSession">Create picker session</button>
+          <button id="loadMedia" class="secondary">Load selected media</button>
+        </div>
+        <p id="pickerStatus" class="status">No picker session yet.</p>
+      </section>
+
+      <section>
+        <h2>3. Gallery Details</h2>
+        <div class="grid">
+          <label>Title <input id="title" required /></label>
+          <label>Slug <input id="slug" required /></label>
+          <label>Date <input id="date" type="date" required /></label>
+          <label>Category <input id="category" value="Corporate Event" required /></label>
+          <label>Section
+            <select id="section">
+              <option value="corporate-events">Corporate events</option>
+              <option value="content">Content</option>
+              <option value="portraits">Portraits</option>
+              <option value="personal">Personal</option>
+            </select>
+          </label>
+          <label>Publish status
+            <select id="publishStatus">
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+              <option value="archived">Archived</option>
+            </select>
+          </label>
+          <label>Client <input id="client" /></label>
+          <label>Client visibility
+            <select id="clientVisibility">
+              <option value="confidential">Confidential</option>
+              <option value="hidden">Hidden</option>
+              <option value="public">Public</option>
+            </select>
+          </label>
+          <label class="full">Summary <input id="summary" /></label>
+          <label class="full">Description <textarea id="description"></textarea></label>
+          <label class="full">Services, comma-separated <input id="services" value="Event photography, Speaker coverage, Networking coverage" /></label>
+          <label class="full">Tags, comma-separated <input id="tags" value="corporate, event" /></label>
+          <label class="full">Google Photos full-gallery URL <input id="googlePhotosUrl" /></label>
+          <label class="full">Body copy <textarea id="body"></textarea></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>4. Process and Save</h2>
+        <div class="actions">
+          <button id="processImages">Download and process selected images</button>
+          <button id="saveGallery" class="secondary">Save Markdown gallery</button>
+        </div>
+        <p id="saveStatus" class="status">No processed images yet.</p>
+        <div id="warnings" class="warnings"></div>
+        <div id="images" class="images"></div>
+      </section>
+    </main>
+
+    <script>
+      const state = { session: null, mediaItems: [], processed: null };
+      const $ = (id) => document.getElementById(id);
+      const slugify = (value) => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+      const list = (value) => value.split(",").map((item) => item.trim()).filter(Boolean);
+
+      $("title").addEventListener("input", () => {
+        if (!$("slug").value.trim()) $("slug").value = slugify($("title").value);
+      });
+
+      fetch("/api/config").then((r) => r.json()).then((config) => {
+        $("config").textContent = config.hasClientId
+          ? `Ready. Redirect URI: ${config.redirectUri}\nScope: ${config.scope}\nClient secret present: ${config.hasClientSecret ? "yes" : "no"}`
+          : "Missing GOOGLE_CLIENT_ID in .env. Add it before connecting Google Photos. If you created a Web application OAuth client, also add GOOGLE_CLIENT_SECRET.";
+      });
+
+      $("createSession").addEventListener("click", async () => {
+        const response = await fetch("/api/picker/session", { method: "POST" });
+        state.session = await response.json();
+        $("pickerStatus").textContent = JSON.stringify(state.session, null, 2);
+        if (state.session.pickerUri) window.open(state.session.pickerUri, "_blank", "noopener");
+      });
+
+      $("loadMedia").addEventListener("click", async () => {
+        if (!state.session?.id) return alert("Create a picker session first.");
+        let pageToken = "";
+        const mediaItems = [];
+        do {
+          const params = new URLSearchParams({ sessionId: state.session.id });
+          if (pageToken) params.set("pageToken", pageToken);
+          const response = await fetch(`/api/picker/media?${params}`);
+          const data = await response.json();
+          if (data.pending) {
+            $("pickerStatus").textContent = data.message;
+            return;
+          }
+          if (!response.ok) {
+            $("pickerStatus").textContent = JSON.stringify(data, null, 2);
+            return;
+          }
+          mediaItems.push(...(data.mediaItems || []));
+          pageToken = data.nextPageToken || "";
+        } while (pageToken);
+        state.mediaItems = mediaItems;
+        $("pickerStatus").textContent = mediaItems.length
+          ? `Loaded ${mediaItems.length} selected media items.`
+          : "No selected media returned yet. Finish the Google Photos Picker flow, then click Load selected media again.";
+      });
+
+      $("processImages").addEventListener("click", async () => {
+        if (!state.mediaItems.length) return alert("Load selected media first.");
+        $("saveStatus").textContent = "Downloading and processing images. This can take a while for large galleries...";
+        const response = await fetch("/api/import", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: $("slug").value, title: $("title").value, mediaItems: state.mediaItems })
+        });
+        state.processed = await response.json();
+        if (!response.ok) return $("saveStatus").textContent = JSON.stringify(state.processed, null, 2);
+        $("slug").value = state.processed.slug;
+        renderImages();
+        $("saveStatus").textContent = `Processed ${state.processed.images.length} images. GPS detected before stripping: ${state.processed.gpsDetected ? "yes" : "no"}.`;
+      });
+
+      function renderImages() {
+        $("images").innerHTML = "";
+        state.processed.images.forEach((image, index) => {
+          const card = document.createElement("article");
+          card.className = "image-card";
+          card.innerHTML = `<img src="${image.thumb}" alt=""><div><button class="secondary" type="button" data-up="${index}">Move up</button><button class="secondary" type="button" data-down="${index}">Move down</button><button class="secondary" type="button" data-cover="${index}">Use as cover</button></div>`;
+          $("images").append(card);
+        });
+        document.querySelectorAll("[data-cover]").forEach((button) => {
+          button.addEventListener("click", () => {
+            state.processed.coverImage = state.processed.images[Number(button.dataset.cover)].large;
+            $("saveStatus").textContent = `Cover selected: ${state.processed.coverImage}`;
+          });
+        });
+        document.querySelectorAll("[data-up]").forEach((button) => {
+          button.addEventListener("click", () => moveImage(Number(button.dataset.up), -1));
+        });
+        document.querySelectorAll("[data-down]").forEach((button) => {
+          button.addEventListener("click", () => moveImage(Number(button.dataset.down), 1));
+        });
+      }
+
+      function moveImage(index, direction) {
+        const nextIndex = index + direction;
+        if (!state.processed || nextIndex < 0 || nextIndex >= state.processed.images.length) return;
+        const [image] = state.processed.images.splice(index, 1);
+        state.processed.images.splice(nextIndex, 0, image);
+        const coverStillExists = state.processed.images.some((item) => item.large === state.processed.coverImage);
+        if (!coverStillExists) state.processed.coverImage = state.processed.images[0]?.large;
+        renderImages();
+      }
+
+      function payload() {
+        return {
+          title: $("title").value,
+          slug: $("slug").value,
+          date: $("date").value,
+          category: $("category").value,
+          section: $("section").value,
+          client: $("client").value,
+          clientVisibility: $("clientVisibility").value,
+          publishStatus: $("publishStatus").value,
+          summary: $("summary").value,
+          description: $("description").value,
+          services: list($("services").value),
+          tags: list($("tags").value),
+          googlePhotosUrl: $("googlePhotosUrl").value,
+          body: $("body").value,
+          coverImage: state.processed?.coverImage,
+          images: state.processed?.images || []
+        };
+      }
+
+      $("saveGallery").addEventListener("click", async () => {
+        if (!state.processed?.images?.length) {
+          $("saveStatus").textContent = "Nothing saved. Click “Download and process selected images” first, then save the Markdown gallery.";
+          return;
+        }
+        const data = payload();
+        const warnings = [];
+        if (state.processed?.gpsDetected) warnings.push("GPS metadata was detected before processing and has been stripped from generated WebP files.");
+        if (data.clientVisibility === "public") warnings.push("Client name is public.");
+        if (data.googlePhotosUrl) warnings.push("Google Photos full-gallery link is included.");
+        if (data.images.length > 80) warnings.push("Gallery contains more than 80 images.");
+        if (data.publishStatus === "published") warnings.push("Gallery is being saved as published.");
+        $("warnings").innerHTML = warnings.map((warning) => `<p>${warning}</p>`).join("");
+
+        const response = await fetch("/api/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          $("saveStatus").textContent = `Save failed:\n${JSON.stringify(result, null, 2)}`;
+          return;
+        }
+        $("saveStatus").textContent = `${result.message}\nSaved to: ${result.path}`;
+      });
+    </script>
+  </body>
+</html>
