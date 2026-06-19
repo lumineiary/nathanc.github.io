@@ -4,6 +4,8 @@ slug: "ai-business-conference"
 date: "2026-05-28"
 category: "Corporate Conference"
 section: "corporate-events"
+# photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom
+photographyType: "corporate-private-events"
 venue: "Singapore"
 client: "Confidential"
 clientVisibility: "confidential"

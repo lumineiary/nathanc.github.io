@@ -187,6 +187,7 @@ async function writeGalleryContent({ folderPath, slug, fallbackTitle, manifest }
     date: data.date || new Date().toISOString().slice(0, 10),
     category: data.category || "Photography",
     section: data.section || "corporate-events",
+    photographyType: data.photographyType || "corporate-private-events",
     client: data.client || undefined,
     clientVisibility: data.clientVisibility || "hidden",
     featured: data.featured === true || data.featured === "true",
@@ -200,7 +201,11 @@ async function writeGalleryContent({ folderPath, slug, fallbackTitle, manifest }
   });
 
   await mkdir(contentRoot, { recursive: true });
-  await writeFile(contentPath, `---\n${YAML.stringify(frontmatter).trim()}\n---\n\n${parsed.content.trim()}\n`);
+  const yaml = YAML.stringify(frontmatter).trim();
+  await writeFile(
+    contentPath,
+    `---\n# photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom\n${yaml}\n---\n\n${parsed.content.trim()}\n`
+  );
 }
 
 function cleanFrontmatter(frontmatter) {

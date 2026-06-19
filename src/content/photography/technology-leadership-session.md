@@ -4,6 +4,8 @@ slug: "technology-leadership-session"
 date: "2026-04-19"
 category: "Panel / Seminar"
 section: "corporate-events"
+# photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom
+photographyType: "corporate-private-events"
 venue: "Singapore"
 clientVisibility: "hidden"
 featured: true

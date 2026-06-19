@@ -1,8 +1,10 @@
 ---
+# photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom
 title: Cosplay Test
 date: 2026-06-19
 category: Photography
 section: corporate-events
+photographyType: photoshoot
 clientVisibility: hidden
 featured: false
 publishStatus: published

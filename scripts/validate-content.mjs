@@ -9,6 +9,7 @@ const publicDir = path.join(root, "public");
 const contentDir = path.join(root, "src", "content");
 const errors = [];
 const warnings = [];
+const allowedPhotographyTypes = ["corporate-private-events", "stage-work", "photoshoot", "wedding-rom"];
 
 function fail(message) {
   errors.push(message);
@@ -105,6 +106,9 @@ async function validatePhotography() {
     }
     if (gallery.data.section && !["corporate-events", "content", "portraits", "personal"].includes(String(gallery.data.section))) {
       warn(`Photography gallery "${gallery.file}" has invalid section; corporate-events fallback will be used.`);
+    }
+    if (gallery.data.photographyType && !allowedPhotographyTypes.includes(String(gallery.data.photographyType))) {
+      warn(`Photography gallery "${gallery.file}" has invalid photographyType; corporate-private-events fallback will be used.`);
     }
 
     const images = imageCandidates(gallery);

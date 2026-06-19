@@ -16,6 +16,13 @@ const photoSection = z.preprocess(
   (value) => (["corporate-events", "content", "portraits", "personal"].includes(String(value)) ? value : "corporate-events"),
   z.enum(["corporate-events", "content", "portraits", "personal"])
 );
+const photographyType = z.preprocess(
+  (value) =>
+    ["corporate-private-events", "stage-work", "photoshoot", "wedding-rom"].includes(String(value))
+      ? value
+      : "corporate-private-events",
+  z.enum(["corporate-private-events", "stage-work", "photoshoot", "wedding-rom"])
+);
 const looseDate = z.preprocess((value) => {
   const date = value instanceof Date ? value : new Date(String(value || ""));
   return Number.isNaN(date.getTime()) ? new Date(0) : date;
@@ -43,6 +50,7 @@ const photography = defineCollection({
     date: looseDate.default(new Date(0)),
     category: stringOrDefault("Photography"),
     section: photoSection,
+    photographyType,
     venue: optionalString,
     client: optionalString,
     clientVisibility,

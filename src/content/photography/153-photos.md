@@ -1,8 +1,10 @@
 ---
+# photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom
 title: Corporate Shoot Test
 date: 2026-06-19
 category: Photography
 section: corporate-events
+photographyType: corporate-private-events
 clientVisibility: hidden
 featured: false
 publishStatus: published

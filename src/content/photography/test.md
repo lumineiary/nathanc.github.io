@@ -4,6 +4,8 @@ slug: test
 date: 2026-11-11
 category: Corporate Event
 section: corporate-events
+# photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom
+photographyType: corporate-private-events
 clientVisibility: public
 featured: false
 publishStatus: published
