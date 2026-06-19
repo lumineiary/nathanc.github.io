@@ -1,6 +1,6 @@
 ---
 title: Example Gallery
-date: 2026-06-18
+date: 2026-06-19
 category: Photography
 section: corporate-events
 clientVisibility: hidden

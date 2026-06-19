@@ -1,0 +1,315 @@
+{
+  "generatedAt": "2026-06-19T08:37:29.076Z",
+  "sourceFiles": [
+    {
+      "name": "IMG_3970.jpg",
+      "mtimeMs": 1779522906617.5159,
+      "size": 3204548,
+      "outputThumb": "image-001-thumb.webp",
+      "outputLarge": "image-001-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    },
+    {
+      "name": "IMG_3971.jpg",
+      "mtimeMs": 1779522906650.4766,
+      "size": 3375789,
+      "outputThumb": "image-002-thumb.webp",
+      "outputLarge": "image-002-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    },
+    {
+      "name": "IMG_3972.jpg",
+      "mtimeMs": 1779522906862.2666,
+      "size": 3306614,
+      "outputThumb": "image-003-thumb.webp",
+      "outputLarge": "image-003-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3973.jpg",
+      "mtimeMs": 1779522907536.4255,
+      "size": 5326562,
+      "outputThumb": "image-004-thumb.webp",
+      "outputLarge": "image-004-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3974.jpg",
+      "mtimeMs": 1779522907785.459,
+      "size": 5594314,
+      "outputThumb": "image-005-thumb.webp",
+      "outputLarge": "image-005-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3975.jpg",
+      "mtimeMs": 1779522907955.4976,
+      "size": 5888410,
+      "outputThumb": "image-006-thumb.webp",
+      "outputLarge": "image-006-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3976.jpg",
+      "mtimeMs": 1779522908481.8315,
+      "size": 5764282,
+      "outputThumb": "image-007-thumb.webp",
+      "outputLarge": "image-007-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3977.jpg",
+      "mtimeMs": 1779522908748.9446,
+      "size": 5057561,
+      "outputThumb": "image-008-thumb.webp",
+      "outputLarge": "image-008-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3978.jpg",
+      "mtimeMs": 1779522908941.4592,
+      "size": 6018808,
+      "outputThumb": "image-009-thumb.webp",
+      "outputLarge": "image-009-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    },
+    {
+      "name": "IMG_3979.jpg",
+      "mtimeMs": 1779522909412.76,
+      "size": 6415714,
+      "outputThumb": "image-010-thumb.webp",
+      "outputLarge": "image-010-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3980.jpg",
+      "mtimeMs": 1779522909641.2124,
+      "size": 5581543,
+      "outputThumb": "image-011-thumb.webp",
+      "outputLarge": "image-011-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3981.jpg",
+      "mtimeMs": 1779522909794.5442,
+      "size": 5367875,
+      "outputThumb": "image-012-thumb.webp",
+      "outputLarge": "image-012-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3982.jpg",
+      "mtimeMs": 1779522910223.944,
+      "size": 5327396,
+      "outputThumb": "image-013-thumb.webp",
+      "outputLarge": "image-013-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3983.jpg",
+      "mtimeMs": 1779522910494.4514,
+      "size": 5600024,
+      "outputThumb": "image-014-thumb.webp",
+      "outputLarge": "image-014-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3984.jpg",
+      "mtimeMs": 1779522910694.9978,
+      "size": 5376211,
+      "outputThumb": "image-015-thumb.webp",
+      "outputLarge": "image-015-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3985.jpg",
+      "mtimeMs": 1779522911226.9924,
+      "size": 5077283,
+      "outputThumb": "image-016-thumb.webp",
+      "outputLarge": "image-016-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3986.jpg",
+      "mtimeMs": 1779522911543.5056,
+      "size": 5003203,
+      "outputThumb": "image-017-thumb.webp",
+      "outputLarge": "image-017-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3987.jpg",
+      "mtimeMs": 1779522911746.3564,
+      "size": 5831015,
+      "outputThumb": "image-018-thumb.webp",
+      "outputLarge": "image-018-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    },
+    {
+      "name": "IMG_3988.jpg",
+      "mtimeMs": 1779522912297.972,
+      "size": 5800689,
+      "outputThumb": "image-019-thumb.webp",
+      "outputLarge": "image-019-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    },
+    {
+      "name": "IMG_3989.jpg",
+      "mtimeMs": 1779522912526.8845,
+      "size": 5228144,
+      "outputThumb": "image-020-thumb.webp",
+      "outputLarge": "image-020-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3990.jpg",
+      "mtimeMs": 1779522912822.6545,
+      "size": 6154610,
+      "outputThumb": "image-021-thumb.webp",
+      "outputLarge": "image-021-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    },
+    {
+      "name": "IMG_3991.jpg",
+      "mtimeMs": 1779522913193.3953,
+      "size": 6061884,
+      "outputThumb": "image-022-thumb.webp",
+      "outputLarge": "image-022-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    },
+    {
+      "name": "IMG_3992.jpg",
+      "mtimeMs": 1779522913474.898,
+      "size": 7228514,
+      "outputThumb": "image-023-thumb.webp",
+      "outputLarge": "image-023-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    },
+    {
+      "name": "IMG_3993.jpg",
+      "mtimeMs": 1779522913739.0227,
+      "size": 8373680,
+      "outputThumb": "image-024-thumb.webp",
+      "outputLarge": "image-024-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    },
+    {
+      "name": "IMG_3994.jpg",
+      "mtimeMs": 1779522914185.134,
+      "size": 8382973,
+      "outputThumb": "image-025-thumb.webp",
+      "outputLarge": "image-025-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3995.jpg",
+      "mtimeMs": 1779522914448.137,
+      "size": 8682028,
+      "outputThumb": "image-026-thumb.webp",
+      "outputLarge": "image-026-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3996.jpg",
+      "mtimeMs": 1779522914620.276,
+      "size": 8382057,
+      "outputThumb": "image-027-thumb.webp",
+      "outputLarge": "image-027-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3997.jpg",
+      "mtimeMs": 1779522915315.446,
+      "size": 8405138,
+      "outputThumb": "image-028-thumb.webp",
+      "outputLarge": "image-028-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3998.jpg",
+      "mtimeMs": 1779522915540.8833,
+      "size": 8065355,
+      "outputThumb": "image-029-thumb.webp",
+      "outputLarge": "image-029-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_3999.jpg",
+      "mtimeMs": 1779522915687.5535,
+      "size": 7782013,
+      "outputThumb": "image-030-thumb.webp",
+      "outputLarge": "image-030-large.webp",
+      "width": 1867,
+      "height": 2800,
+      "aspectRatio": 0.6668
+    },
+    {
+      "name": "IMG_4000.jpg",
+      "mtimeMs": 1779522916080.8274,
+      "size": 4301870,
+      "outputThumb": "image-031-thumb.webp",
+      "outputLarge": "image-031-large.webp",
+      "width": 2800,
+      "height": 1867,
+      "aspectRatio": 1.4997
+    }
+  ]
+}
