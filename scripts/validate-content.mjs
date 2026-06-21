@@ -100,7 +100,7 @@ async function validatePhotography() {
     if (seenFiles.has(gallery.slugFromFile)) warn(`Duplicate filename slug seen: ${gallery.slugFromFile}`);
     seenFiles.add(gallery.slugFromFile);
 
-    if (!gallery.data.title) warn(`Photography gallery "${gallery.file}" has no title; filename fallback will be used.`);
+    if (!gallery.data.guidedContext) warn(`Photography gallery "${gallery.file}" has no guidedContext; AI title and summary generation will have little context.`);
     if (gallery.data.slug && gallery.data.slug !== gallery.slugFromFile) {
       warn(`Photography gallery "${gallery.file}" slug does not match filename; filename route will be used.`);
     }
@@ -146,7 +146,9 @@ async function validateDataProjects() {
 async function validateContentWork() {
   const items = await readContentFiles("content-work", [".md", ".mdx"]);
   for (const item of items) {
-    if (!item.data.title) warn(`Content item "${item.file}" has no title; filename fallback will be used.`);
+    if (!item.data.title && !item.data.generatedTitle && !item.data.guidedContext) {
+      warn(`Content item "${item.file}" has no title, generatedTitle, or guidedContext; filename fallback will be used.`);
+    }
     if (item.data.publishStatus && !["draft", "published", "archived"].includes(String(item.data.publishStatus))) {
       warn(`Content item "${item.file}" has invalid publishStatus; it will render as published.`);
     }

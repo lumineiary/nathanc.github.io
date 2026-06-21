@@ -27,6 +27,11 @@ export function entrySlug(item: PhotographyEntry | DataProjectEntry | ContentWor
   return item.id.replace(/\.(md|mdx)$/, "");
 }
 
+export function displayTitle(item: PhotographyEntry | ContentWorkEntry, fallback = "Untitled") {
+  const data = item.data as { title?: string; generatedTitle?: string };
+  return cleanTitle(data.title) || cleanTitle(data.generatedTitle) || humanizeSlug(entrySlug(item)) || fallback;
+}
+
 export function formatDate(date: Date) {
   const safe = safeDate(date);
   if (safe.getTime() === 0) return "";
@@ -46,4 +51,17 @@ export function clientLabel(item: PhotographyEntry) {
 export function safeDate(value: unknown) {
   const date = value instanceof Date ? value : new Date(String(value || ""));
   return Number.isNaN(date.getTime()) ? new Date(0) : date;
+}
+
+function cleanTitle(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : "";
+}
+
+function humanizeSlug(slug: string) {
+  return slug
+    .replace(/\.(md|mdx)$/, "")
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }

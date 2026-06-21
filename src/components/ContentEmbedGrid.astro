@@ -1,5 +1,6 @@
 ---
 import type { ContentWorkEntry } from "@lib/content";
+import { displayTitle } from "@lib/content";
 import { render } from "astro:content";
 
 interface Props {
@@ -10,6 +11,7 @@ const { items } = Astro.props;
 const renderedItems = await Promise.all(
   items.map(async (item) => ({
     item,
+    title: displayTitle(item),
     Body: (await render(item)).Content
   }))
 );
@@ -51,7 +53,7 @@ const platformLabels = {
     items.length > 0 ? (
       <div class="content-embed-grid">
         {
-          renderedItems.map(({ item, Body }) => (
+          renderedItems.map(({ item, title, Body }) => (
             <article
               class="content-embed-card"
               data-content-card
@@ -64,7 +66,7 @@ const platformLabels = {
                     <div class="native-embed" set:html={item.data.embedHtml} />
                   ) : item.data.coverImage ? (
                     <a href={item.data.externalUrl || "#"} target="_blank" rel="noreferrer">
-                      <img src={item.data.coverImage} alt={item.data.title} loading="lazy" />
+                      <img src={item.data.coverImage} alt={title} loading="lazy" />
                     </a>
                   ) : item.data.externalUrl ? (
                     <a class="content-direct-window" href={item.data.externalUrl} target="_blank" rel="noreferrer">
@@ -76,10 +78,10 @@ const platformLabels = {
                 }
               </div>
               <div class="content-embed-text">
-                <h3>{item.data.title}</h3>
+                <h3>{title}</h3>
                 {
                   item.data.metrics.length > 0 && (
-                    <div class="content-metrics" aria-label={`${item.data.title} metrics`}>
+                    <div class="content-metrics" aria-label={`${title} metrics`}>
                       {item.data.metrics.map((metric) => (
                         <span>
                           <strong>{metric.value}</strong>

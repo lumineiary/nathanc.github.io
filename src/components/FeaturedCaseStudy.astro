@@ -1,11 +1,13 @@
 ---
 import type { ContentWorkEntry } from "@lib/content";
+import { displayTitle } from "@lib/content";
 
 interface Props {
   item: ContentWorkEntry;
 }
 
 const { item } = Astro.props;
+const title = displayTitle(item);
 const platformLabels = {
   instagram: "Instagram",
   tiktok: "TikTok",
@@ -19,7 +21,7 @@ const hasMedia = Boolean(item.data.embedHtml || item.data.coverImage);
   <div class="home-section-heading">
     <p class="eyebrow">Featured case study</p>
     <div>
-      <h2 id="content-case-study-title">{item.data.title}</h2>
+      <h2 id="content-case-study-title">{title}</h2>
       <p>{item.data.summary || "A closer look at a content project with context, deliverables, and process."}</p>
     </div>
   </div>
@@ -52,7 +54,7 @@ const hasMedia = Boolean(item.data.embedHtml || item.data.coverImage);
         item.data.embedHtml ? (
           <div class="native-embed" set:html={item.data.embedHtml} />
         ) : item.data.coverImage ? (
-          <img src={item.data.coverImage} alt={item.data.title} loading="lazy" />
+          <img src={item.data.coverImage} alt={title} loading="lazy" />
         ) : ""
       }
     </aside>}

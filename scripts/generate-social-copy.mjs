@@ -44,29 +44,61 @@ for (const collection of collections) {
 
     if (isExplicitlyDisabled(data.autoSummary) || data.publishStatus === "draft") continue;
     if (collection.kind === "social" && data.contentType !== "embed" && data.autoSummary !== true && data.autoSummary !== "true") continue;
-    if (!regenerate && hasGeneratedBlock(parsed.content)) continue;
 
-    const generated = dedupeRepeatedSentences(await generateCopy(data, collection.kind));
-    if (!generated) continue;
-
-    if (!isUsableCopy(generated)) {
-      console.warn(`AI summary generation ignored for "${data.title || file}": output was too short or incomplete.`);
-      console.warn(`Rejected output: ${generated || "[empty]"}`);
-      continue;
-    }
+    const needsTitle = needsGeneratedTitle(data);
+    const needsSummary = regenerate || (collection.kind === "photography" ? !cleanString(data.summary) : !hasGeneratedBlock(parsed.content));
 
     const nextData = { ...data };
-    if (collection.generatedFrontmatterField) {
-      nextData[collection.generatedFrontmatterField] = generated;
+    let nextBody = parsed.content.trim();
+    let didChange = false;
+
+    if (isPlaceholderTitle(nextData.title)) {
+      delete nextData.title;
     }
 
-    const nextBody = replaceGeneratedBlock(parsed.content.trim(), generated);
+    if (collection.kind === "photography" && hasGeneratedBlock(nextBody)) {
+      nextBody = stripGeneratedBlock(nextBody);
+      didChange = true;
+    }
+
+    if (!needsTitle && !needsSummary && !didChange) continue;
+
+    if (needsTitle) {
+      const generatedTitle = await generateTitle(data, collection.kind);
+      if (generatedTitle) {
+        nextData.generatedTitle = generatedTitle;
+        didChange = true;
+        console.log(`Generated ${collection.label} title: ${file}`);
+      }
+    }
+
+    if (needsSummary) {
+      const generated = dedupeRepeatedSentences(await generateCopy(data, collection.kind));
+      if (!generated) {
+        // Keep any generated title from this pass; summary generation is non-blocking.
+      } else if (!isUsableCopy(generated)) {
+        console.warn(`AI summary generation ignored for "${displayLogTitle(data, file)}": output was too short or incomplete.`);
+        console.warn(`Rejected output: ${generated || "[empty]"}`);
+      } else {
+        if (collection.generatedFrontmatterField) {
+          nextData[collection.generatedFrontmatterField] = generated;
+        }
+
+        nextBody = collection.kind === "photography"
+          ? stripGeneratedBlock(nextBody)
+          : replaceGeneratedBlock(nextBody, generated);
+        didChange = true;
+        console.log(`Generated ${collection.label} summary: ${file}`);
+      }
+    }
+
+    if (!didChange) continue;
+
     const nextFile = matter.stringify(nextBody, nextData);
 
     if (nextFile !== raw) {
       await writeFile(filePath, nextFile);
       updated += 1;
-      console.log(`Generated ${collection.label} summary: ${file}`);
     }
   }
 }
@@ -85,27 +117,68 @@ function getGuidance(data) {
   return String(data.guidedContext || "").trim();
 }
 
+function needsGeneratedTitle(data) {
+  if (hasUserTitle(data)) return false;
+  return regenerate || !cleanString(data.generatedTitle);
+}
+
+function hasUserTitle(data) {
+  return Boolean(cleanString(data.title)) && !isPlaceholderTitle(data.title);
+}
+
+function displayLogTitle(data, file = "untitled") {
+  return cleanString(data.title) || cleanString(data.generatedTitle) || file;
+}
+
+function cleanString(value) {
+  return typeof value === "string" && value.trim() ? value.trim() : "";
+}
+
+function isPlaceholderTitle(value) {
+  const title = cleanString(value);
+  if (!title) return false;
+  return /^real estate instagram feature\s*\d*$/i.test(title)
+    || /^untitled(?:\s+(?:gallery|content piece|post|project))?$/i.test(title)
+    || /^(?:corporate shoot|cosplay)\s+test$/i.test(title)
+    || /^joash pics$/i.test(title);
+}
+
+async function generateTitle(data, kind) {
+  const metrics = Array.isArray(data.metrics)
+    ? data.metrics.map((metric) => `${metric.value} ${metric.label}`).join(", ")
+    : "";
+  const platformContext = await fetchPlatformContext(data);
+  const prompt = buildTitlePrompt(data, metrics, platformContext, kind);
+  const title = sanitizeGeneratedTitle(await requestOpenAIText(data, prompt, "title"));
+
+  if (!title) {
+    console.warn(`AI title generation ignored for "${displayLogTitle(data)}": output was empty or unusable.`);
+  }
+
+  return title;
+}
+
 async function generateCopy(data, kind) {
   const metrics = Array.isArray(data.metrics)
     ? data.metrics.map((metric) => `${metric.value} ${metric.label}`).join(", ")
     : "";
   const platformContext = await fetchPlatformContext(data);
   const prompt = buildPrompt(data, metrics, platformContext, kind);
-  const firstCopy = await requestOpenAICopy(data, prompt);
+  const firstCopy = await requestOpenAIText(data, prompt, "summary");
 
   if (!firstCopy) return "";
 
   if (isUsableCopy(firstCopy)) {
     const guidance = getGuidance(data);
     if (isTooVerbatim(firstCopy, guidance) || isTooVerbatim(firstCopy, data.platformCaption)) {
-      console.warn(`AI summary generation ignored for "${data.title || "untitled"}": output copied source wording too closely.`);
+      console.warn(`AI summary generation ignored for "${displayLogTitle(data)}": output copied source wording too closely.`);
       return "";
     }
     return dedupeRepeatedSentences(firstCopy);
   }
 
   if (firstCopy) {
-    console.warn(`AI summary generation retrying for "${data.title || "untitled"}": first output was incomplete.`);
+    console.warn(`AI summary generation retrying for "${displayLogTitle(data)}": first output was incomplete.`);
     console.warn(`First output: ${firstCopy}`);
   }
 
@@ -122,15 +195,55 @@ async function generateCopy(data, kind) {
     "Do not start with a fragment such as This, A, An, or The unless it forms a complete sentence.",
     "Do not add any explanation before or after the copy."
   ].join("\n");
-  const retryCopy = await requestOpenAICopy(data, retryPrompt);
+  const retryCopy = await requestOpenAIText(data, retryPrompt, "summary");
 
   const guidance = getGuidance(data);
   if (isTooVerbatim(retryCopy, guidance) || isTooVerbatim(retryCopy, data.platformCaption)) {
-    console.warn(`AI summary generation ignored for "${data.title || "untitled"}": retry copied source wording too closely.`);
+    console.warn(`AI summary generation ignored for "${displayLogTitle(data)}": retry copied source wording too closely.`);
     return "";
   }
 
   return dedupeRepeatedSentences(retryCopy);
+}
+
+function buildTitlePrompt(data, metrics, platformContext, kind) {
+  const contextLines = kind === "photography"
+    ? [
+        `Photography category: ${data.category || ""}`,
+        `Photography type: ${data.photographyType || ""}`,
+        data.venue ? `Venue: ${data.venue}` : "",
+        data.client && data.clientVisibility === "public" ? `Client: ${data.client}` : "",
+        Array.isArray(data.services) && data.services.length > 0 ? `Services: ${data.services.join(", ")}` : "",
+        Array.isArray(data.tags) && data.tags.length > 0 ? `Tags: ${data.tags.join(", ")}` : "",
+        data.description ? `Existing description: ${data.description}` : ""
+      ]
+    : [
+        `Category: ${data.socialCategory || ""}`,
+        `Platform: ${data.platform || ""}`,
+        data.platformCaption ? `Platform caption or transcript: ${data.platformCaption}` : "",
+        platformContext ? `Best-effort platform metadata: ${platformContext}` : "",
+        metrics ? `Metrics: ${metrics}` : ""
+      ];
+
+  return [
+    kind === "photography"
+      ? "Write a short portfolio title for a photography gallery."
+      : "Write a short portfolio title for a social media content piece.",
+    "Use the context to infer a specific, useful title.",
+    "Return only the title.",
+    "Use 3 to 8 words.",
+    "Use title case only where it feels natural.",
+    "Do not use generic placeholders such as Feature, Test, Untitled, Instagram Feature, Content Piece, or Gallery.",
+    "Do not include emojis, hashtags, quotation marks, markdown, or a period.",
+    "Prefer concrete nouns from the context, such as client, campaign type, property, audience, venue, or content angle.",
+    "",
+    hasUserTitle(data) ? `Existing user title: ${data.title}` : "",
+    ...contextLines,
+    getGuidance(data) ? `guidedContext, highest priority: ${getGuidance(data)}` : "",
+    data.summary ? `Fallback summary: ${data.summary}` : ""
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 function buildPrompt(data, metrics, platformContext, kind) {
@@ -185,7 +298,7 @@ function buildPrompt(data, metrics, platformContext, kind) {
     .join("\n");
 }
 
-async function requestOpenAICopy(data, prompt) {
+async function requestOpenAIText(data, prompt, task = "summary") {
   let response;
   try {
     response = await fetch("https://api.openai.com/v1/responses", {
@@ -202,7 +315,9 @@ async function requestOpenAICopy(data, prompt) {
             content: [
               {
                 type: "input_text",
-                text: "You write concise portfolio copy. Do not explain your reasoning. Return only polished copy."
+                text: task === "title"
+                  ? "You write concise portfolio titles. Do not explain your reasoning. Return only the title."
+                  : "You write concise portfolio copy. Do not explain your reasoning. Return only polished copy."
               }
             ]
           },
@@ -221,17 +336,17 @@ async function requestOpenAICopy(data, prompt) {
       })
     });
   } catch (error) {
-    console.warn(`AI summary generation skipped for "${data.title || "untitled"}" using ${model}: ${error.message}`);
+    console.warn(`AI ${task} generation skipped for "${displayLogTitle(data)}" using ${model}: ${error.message}`);
     return "";
   }
 
   if (!response.ok) {
     const text = await response.text();
-    console.warn(`AI summary generation failed for "${data.title || "untitled"}" using ${model}: ${response.status} ${summarizeApiError(text)}`);
+    console.warn(`AI ${task} generation failed for "${displayLogTitle(data)}" using ${model}: ${response.status} ${summarizeApiError(text)}`);
     return "";
   }
 
-  return parseOpenAICopy(data, await response.json());
+  return parseOpenAIText(data, await response.json(), task);
 }
 
 function summarizeApiError(text) {
@@ -243,17 +358,31 @@ function summarizeApiError(text) {
   }
 }
 
-function parseOpenAICopy(data, json) {
+function parseOpenAIText(data, json, task) {
   const status = json.status;
   const incompleteReason = json.incomplete_details?.reason;
   if (status && status !== "completed") {
-    console.warn(`AI summary generation warning for "${data.title || "untitled"}": OpenAI status was ${status}${incompleteReason ? ` (${incompleteReason})` : ""}.`);
+    console.warn(`AI ${task} generation warning for "${displayLogTitle(data)}": OpenAI status was ${status}${incompleteReason ? ` (${incompleteReason})` : ""}.`);
   }
 
   const copy = String(json.output_text || extractResponseText(json) || "")
     .replace(/\s+/g, " ")
     .trim();
   return copy;
+}
+
+function sanitizeGeneratedTitle(value) {
+  const title = cleanString(value)
+    .replace(/^["'“”‘’]+|["'“”‘’.]+$/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!title) return "";
+  if (isPlaceholderTitle(title)) return "";
+  const words = title.split(/\s+/).filter(Boolean);
+  if (words.length < 2 || words.length > 10) return "";
+  if (/[.!?]$/.test(title)) return "";
+  return title;
 }
 
 function extractResponseText(json) {
@@ -278,6 +407,14 @@ function replaceGeneratedBlock(body, generated) {
   }
 
   return `${block}\n\n${body}`.trim();
+}
+
+function stripGeneratedBlock(body) {
+  const start = body.indexOf(startMarker);
+  const end = body.indexOf(endMarker);
+  if (start === -1 || end === -1 || end <= start) return body;
+
+  return `${body.slice(0, start).trim()}\n\n${body.slice(end + endMarker.length).trim()}`.trim();
 }
 
 function isUsableCopy(copy) {

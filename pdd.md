@@ -108,6 +108,7 @@ Recommended frontmatter:
 
 ```yaml
 title: Social Media Post
+generatedTitle: Optional AI-generated display title when title is absent.
 date: 2026-06-19
 contentType: embed
 platform: instagram
@@ -126,6 +127,8 @@ tags:
 ```
 
 Social media embeds support AI-assisted body copy by default. Use `guidedContext` as the single AI guidance field for both strategic framing and factual context. Set `autoSummary: false` only when a specific embed should not be touched by the AI summary generator.
+
+`title` is treated as the manual title. If it is absent or blank, the UI should use `generatedTitle`. The AI copy helper may fill `generatedTitle` from the same contextual fields, but it must not replace a real manual `title`.
 
 Allowed `contentType` values:
 
@@ -216,7 +219,6 @@ Each gallery gets one folder:
 
 ```text
 inbox/galleries/my-event/
-  gallery.md
   DSC001.jpg
   DSC002.jpg
   DSC003.webp
@@ -236,7 +238,8 @@ The importer should:
 - treat each folder as one gallery
 - slugify the folder name
 - read optional `gallery.md`
-- create a starter `gallery.md` if missing
+- if `gallery.md` is missing or missing `guidedContext` in an interactive local run, prompt for an optional title and mandatory context, then create or update `gallery.md`
+- if `gallery.md` is missing/missing `guidedContext` in a non-interactive environment, fail clearly instead of hanging
 - process `.jpg`, `.jpeg`, `.png`, and `.webp`
 - generate 480px long-edge WebP thumbnails
 - generate 2800px long-edge WebP large images
@@ -261,6 +264,7 @@ Smallest useful file:
 ```md
 ---
 title: My Event
+generatedTitle: Optional AI-generated display title when title is absent.
 photographyType: corporate-private-events
 guidedContext: "The angle, useful facts, client value, venue, services, and moments the AI summary should use."
 ---
@@ -268,11 +272,19 @@ guidedContext: "The angle, useful facts, client value, venue, services, and mome
 Optional write-up here.
 ```
 
+If this file is missing or has no `guidedContext`, the local importer should ask for:
+
+- `title`, optional but recommended
+- `guidedContext`, mandatory
+
+The mandatory context should feed the AI title and summary generator. The generated title must remain separate from the manual `title` field.
+
 Recommended full example:
 
 ```md
 ---
 title: My Event
+generatedTitle: Optional AI-generated display title when title is absent.
 photographyType: corporate-private-events
 date: 2026-06-19
 category: Corporate Event
@@ -299,7 +311,10 @@ Optional write-up here.
 ### Required
 
 `title`
-: Human-readable gallery title. If missing, the importer may infer it from the folder name.
+: Manual human-readable gallery title. If absent or blank, the UI falls back to `generatedTitle`.
+
+`generatedTitle`
+: AI-generated display title inferred from `guidedContext`, captions, metrics, and other metadata. This is separate from `title` so manual titles are never overwritten.
 
 ### Strongly Recommended
 

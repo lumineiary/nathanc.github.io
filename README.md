@@ -56,10 +56,13 @@ Minimum `gallery.md`:
 ```yaml
 ---
 title: Corporate Event Name
+generatedTitle: Optional AI-generated display title when title is absent.
 photographyType: corporate-private-events
 guidedContext: "The angle, useful facts, client value, venue, services, and moments the AI summary should use."
 ---
 ```
+
+`title` is the manual title. If it is blank or absent, the site falls back to `generatedTitle`. The AI helper can fill `generatedTitle` from `guidedContext`, but it will not replace a real manual `title`.
 
 `guidedContext` is the single field for AI guidance. Put both the strategic angle and useful facts inside it. `autoSummary` is enabled implicitly for photography galleries, so you only need to set `autoSummary: false` when you do not want AI-assisted summary generation for that gallery.
 
@@ -85,6 +88,7 @@ Typical frontmatter:
 
 ```yaml
 title: Social Media Post
+generatedTitle: Optional AI-generated display title when title is absent.
 date: 2026-06-19
 contentType: embed
 platform: instagram
@@ -132,6 +136,8 @@ Use `lifestyle` for people-led, creator-style, behind-the-scenes, personality, t
 Use `real-estate` for property, agent, developer, home-tour, or listing-adjacent content.
 
 The Social media page selects `Corporate` by default. Tab order is `Corporate`, `Lifestyle`, `Real estate`, then `All`.
+
+`title` is optional for social media items. If you leave it blank, the site uses `generatedTitle`. The AI helper can generate `generatedTitle` from `guidedContext`, captions, metrics, and other frontmatter context.
 
 Use `embedHtml` for native platform embeds. Use `coverImage` plus `externalUrl` when you prefer a screenshot/preview card.
 
@@ -291,7 +297,6 @@ Create one folder per gallery:
 
 ```text
 inbox/galleries/my-event/
-  gallery.md
   DSC001.jpg
   DSC002.jpg
   DSC003.webp
@@ -306,12 +311,20 @@ Supported source image formats:
 .webp
 ```
 
-The smallest useful `gallery.md` is:
+If `gallery.md` is missing, or if it exists without `guidedContext`, the importer will ask for:
+
+- `title`, optional but recommended
+- `context`, mandatory
+
+The context is saved as `guidedContext` and used by the AI summary system to generate the display title when no manual title is provided, plus the gallery description.
+
+The smallest manual `gallery.md` is:
 
 ```md
 ---
 title: My Event
 photographyType: corporate-private-events
+guidedContext: "What happened, who it was for, what the gallery should communicate, and any moments or value to highlight."
 ---
 
 Optional write-up here.
@@ -340,7 +353,7 @@ Generated Markdown stays intentionally simple. It does not need an explicit `ima
 public/images/galleries/[slug]/manifest.json
 ```
 
-If `gallery.md` is missing, the importer creates a starter file using the folder name.
+If `gallery.md` is missing or missing `guidedContext` during an interactive local run, the importer creates or updates it after asking for the title/context. In non-interactive environments such as GitHub Actions, the importer will stop with a clear message instead of hanging. Run `npm run import:magic` locally first, answer the prompts, then commit the generated `gallery.md`, WebP assets, and Markdown output.
 
 Raw inbox images are ignored by Git:
 

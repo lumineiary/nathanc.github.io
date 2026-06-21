@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-06-21T14:42:20.113Z",
+  "sourceFiles": [
+    {
+      "name": "kishan scenes.jpg",
+      "mtimeMs": 1773930201412.1824,
+      "size": 4549495,
+      "outputThumb": "image-001-thumb.webp",
+      "outputLarge": "image-001-large.webp",
+      "width": 1575,
+      "height": 2800,
+      "aspectRatio": 0.5625
+    },
+    {
+      "name": "kishan scenes(1).jpg",
+      "mtimeMs": 1773930209946.1682,
+      "size": 4108715,
+      "outputThumb": "image-002-thumb.webp",
+      "outputLarge": "image-002-large.webp",
+      "width": 1575,
+      "height": 2800,
+      "aspectRatio": 0.5625
+    },
+    {
+      "name": "kishan scenes(2).jpg",
+      "mtimeMs": 1773930233351.8489,
+      "size": 3643141,
+      "outputThumb": "image-003-thumb.webp",
+      "outputLarge": "image-003-large.webp",
+      "width": 1575,
+      "height": 2800,
+      "aspectRatio": 0.5625
+    }
+  ]
+}

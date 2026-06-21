@@ -1,6 +1,6 @@
 ---
 import type { PhotographyEntry } from "@lib/content";
-import { entrySlug, galleryUrl } from "@lib/content";
+import { displayTitle, entrySlug, galleryUrl } from "@lib/content";
 import { getGalleryCover } from "@lib/gallery-images";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 const { item, large = false } = Astro.props;
 const slug = entrySlug(item);
 const cover = getGalleryCover(slug, item.data.coverImage, item.data.images);
-const title = item.data.title || item.id.replace(/\.(md|mdx)$/, "");
+const title = displayTitle(item);
 const category = item.data.category || "Photography";
 ---
 

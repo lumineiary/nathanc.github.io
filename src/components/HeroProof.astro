@@ -1,6 +1,6 @@
 ---
 import type { DataProjectEntry, PhotographyEntry } from "@lib/content";
-import { galleryUrl, projectUrl } from "@lib/content";
+import { displayTitle, galleryUrl, projectUrl } from "@lib/content";
 import { entrySlug } from "@lib/content";
 import { getGalleryCover } from "@lib/gallery-images";
 
@@ -15,13 +15,15 @@ const secondPhoto = photos[1] || photos[0];
 const firstProject = projects[0];
 const firstCover = firstPhoto ? getGalleryCover(entrySlug(firstPhoto), firstPhoto.data.coverImage, firstPhoto.data.images) : "";
 const secondCover = secondPhoto ? getGalleryCover(entrySlug(secondPhoto), secondPhoto.data.coverImage, secondPhoto.data.images) : "";
+const firstPhotoTitle = firstPhoto ? displayTitle(firstPhoto) : "";
+const secondPhotoTitle = secondPhoto ? displayTitle(secondPhoto) : "";
 ---
 
 <div class="hero-proof-grid" aria-label="Portfolio preview">
   {
     firstPhoto && (
       <a class="hero-proof-card image-proof" href={galleryUrl(firstPhoto)}>
-        <img src={firstCover} alt={firstPhoto.data.title} />
+        <img src={firstCover} alt={firstPhotoTitle} />
         <span>
           <small>Photography</small>
           <strong>Corporate events</strong>
@@ -46,7 +48,7 @@ const secondCover = secondPhoto ? getGalleryCover(entrySlug(secondPhoto), second
   {
     secondPhoto && (
       <a class="hero-proof-card image-proof secondary-proof" href={galleryUrl(secondPhoto)}>
-        <img src={secondCover} alt={secondPhoto.data.title} />
+        <img src={secondCover} alt={secondPhotoTitle} />
         <span>
           <small>Delivery</small>
           <strong>Client-ready stories</strong>

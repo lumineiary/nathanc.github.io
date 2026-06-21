@@ -61,7 +61,8 @@ const imageSchema = z.object({
 const photography = defineCollection({
   type: "content",
   schema: z.object({
-    title: stringOrDefault("Untitled gallery"),
+    title: optionalString,
+    generatedTitle: optionalString,
     date: looseDate.default(new Date(0)),
     category: stringOrDefault("Photography"),
     section: photoSection,
@@ -105,7 +106,8 @@ const dataProjects = defineCollection({
 const contentWork = defineCollection({
   type: "content",
   schema: z.object({
-    title: stringOrDefault("Untitled content piece"),
+    title: optionalString,
+    generatedTitle: optionalString,
     date: looseDate.default(new Date(0)),
     contentType,
     platform: contentPlatform,

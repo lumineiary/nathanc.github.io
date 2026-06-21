@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import JustifiedGallery from "@components/JustifiedGallery.astro";
 import WorkGrid from "@components/WorkGrid.astro";
-import { clientLabel, entrySlug, formatDate, published } from "@lib/content";
+import { clientLabel, displayTitle, entrySlug, formatDate, published } from "@lib/content";
 import { getGalleryCover, getGalleryImages } from "@lib/gallery-images";
 
 export async function getStaticPaths() {
@@ -17,7 +17,7 @@ const photos = published(await getCollection("photography"));
 const related = photos.filter((photo) => entrySlug(photo) !== entrySlug(item)).slice(0, 2);
 const client = clientLabel(item);
 const slug = entrySlug(item);
-const title = item.data.title || entrySlug(item);
+const title = displayTitle(item);
 const category = item.data.category || "Photography";
 const date = formatDate(item.data.date);
 const galleryImages = getGalleryImages(slug, item.data.images);

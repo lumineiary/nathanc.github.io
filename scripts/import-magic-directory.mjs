@@ -1,5 +1,7 @@
 import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { createInterface } from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
 import sharp from "sharp";
@@ -10,6 +12,7 @@ const inboxRoot = path.join(root, "inbox", "galleries");
 const contentRoot = path.join(root, "src", "content", "photography");
 const outputRoot = path.join(root, "public", "images", "galleries");
 const supportedExtensions = new Set([".jpg", ".jpeg", ".png", ".webp"]);
+let promptInterface;
 
 const thumbLongEdge = 480;
 const largeLongEdge = 2800;
@@ -48,16 +51,80 @@ async function listSourceImages(folderPath) {
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));
 }
 
-async function readGalleryMarkdown(folderPath, fallbackTitle) {
+async function readGalleryMarkdown(folderPath) {
   const galleryMdPath = path.join(folderPath, "gallery.md");
   if (!(await exists(galleryMdPath))) {
-    await writeFile(galleryMdPath, `---\ntitle: ${JSON.stringify(fallbackTitle)}\n---\n`);
-    return {
-      data: { title: fallbackTitle },
-      body: ""
-    };
+    return promptForGalleryMarkdown(folderPath, galleryMdPath, matter("---\n---\n"), {
+      reason: "No gallery.md found, so let's create one."
+    });
   }
-  return matter(await readFile(galleryMdPath, "utf8"));
+
+  const parsed = matter(await readFile(galleryMdPath, "utf8"));
+  if (!String(parsed.data?.guidedContext || "").trim()) {
+    return promptForGalleryMarkdown(folderPath, galleryMdPath, parsed, {
+      reason: "gallery.md exists, but it has no guidedContext."
+    });
+  }
+
+  return parsed;
+}
+
+async function promptForGalleryMarkdown(folderPath, galleryMdPath, parsed, { reason }) {
+  const folderName = path.basename(folderPath);
+  const existingData = parsed.data || {};
+
+  if (!input.isTTY || !output.isTTY) {
+    throw new Error(
+      [
+        `Gallery "${folderName}" needs mandatory context before import.`,
+        reason,
+        "Run `npm run import:magic` locally in an interactive terminal so the importer can ask for details,",
+        "or edit gallery.md manually with at least:",
+        "---",
+        "guidedContext: Your mandatory context here.",
+        "---"
+      ].join("\n")
+    );
+  }
+
+  const prompt = getPromptInterface();
+  console.log(`\nNew gallery detected: ${folderName}`);
+  console.log(reason);
+
+  let title = String(existingData.title || "").trim();
+  if (!title && !String(existingData.generatedTitle || "").trim()) {
+    title = (await prompt.question("Title (optional, press Enter to let AI generate one): ")).trim();
+  }
+
+  let guidedContext = String(existingData.guidedContext || "").trim();
+
+  while (!guidedContext) {
+    guidedContext = (await prompt.question("Context (mandatory, used for AI title/description): ")).trim();
+    if (!guidedContext) {
+      console.log("Context is required. Add the useful facts, angle, client value, event type, or moments to highlight.");
+    }
+  }
+
+  const data = cleanFrontmatter({
+    ...existingData,
+    title: title || existingData.title || undefined,
+    photographyType: existingData.photographyType || "corporate-private-events",
+    publishStatus: existingData.publishStatus || "published",
+    guidedContext
+  });
+  const yaml = YAML.stringify(data).trim();
+  const raw = `---\n${yaml}\n---\n\n${parsed.content.trim()}\n`;
+  await writeFile(galleryMdPath, raw);
+  console.log(`Updated ${path.relative(root, galleryMdPath)}\n`);
+
+  return matter(raw);
+}
+
+function getPromptInterface() {
+  if (!promptInterface) {
+    promptInterface = createInterface({ input, output });
+  }
+  return promptInterface;
 }
 
 async function readManifest(manifestPath) {
@@ -155,7 +222,7 @@ async function processGallery({ folderName, folderPath }) {
 
   await removeStaleOutputs(outputDir, newManifest);
   await writeFile(manifestPath, `${JSON.stringify(newManifest, null, 2)}\n`);
-  await writeGalleryContent({ folderPath, slug, fallbackTitle: folderName, manifest: newManifest });
+  await writeGalleryContent({ folderPath, slug, manifest: newManifest });
   console.log(`Imported ${sourceImages.length} image(s): ${slug}`);
 }
 
@@ -176,14 +243,16 @@ async function removeStaleOutputs(outputDir, manifest) {
   }
 }
 
-async function writeGalleryContent({ folderPath, slug, fallbackTitle, manifest }) {
-  const parsed = await readGalleryMarkdown(folderPath, fallbackTitle);
+async function writeGalleryContent({ folderPath, slug, manifest }) {
+  const parsed = await readGalleryMarkdown(folderPath);
   const data = parsed.data || {};
   const contentPath = path.join(contentRoot, `${slug}.md`);
+  const existing = await readExistingContent(contentPath);
   const first = manifest.sourceFiles[0];
 
   const frontmatter = cleanFrontmatter({
-    title: data.title || fallbackTitle,
+    title: data.title || undefined,
+    generatedTitle: data.generatedTitle || existing.data.generatedTitle || undefined,
     date: data.date || new Date().toISOString().slice(0, 10),
     category: data.category || "Photography",
     section: data.section || "corporate-events",
@@ -192,7 +261,7 @@ async function writeGalleryContent({ folderPath, slug, fallbackTitle, manifest }
     clientVisibility: data.clientVisibility || "hidden",
     featured: data.featured === true || data.featured === "true",
     publishStatus: data.publishStatus || "published",
-    summary: data.summary || undefined,
+    summary: data.summary || existing.data.summary || undefined,
     description: data.description || undefined,
     guidedContext: data.guidedContext || undefined,
     platformCaption: data.platformCaption || undefined,
@@ -205,10 +274,19 @@ async function writeGalleryContent({ folderPath, slug, fallbackTitle, manifest }
 
   await mkdir(contentRoot, { recursive: true });
   const yaml = YAML.stringify(frontmatter).trim();
+  const body = parsed.content.trim() || existing.content.trim();
   await writeFile(
     contentPath,
-    `---\n# photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom\n${yaml}\n---\n\n${parsed.content.trim()}\n`
+    `---\n# photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom\n${yaml}\n---\n\n${body}\n`
   );
+}
+
+async function readExistingContent(contentPath) {
+  try {
+    return matter(await readFile(contentPath, "utf8"));
+  } catch {
+    return { data: {}, content: "" };
+  }
 }
 
 function cleanFrontmatter(frontmatter) {
@@ -225,4 +303,8 @@ for (const folderName of folders) {
     folderName,
     folderPath: path.join(inboxRoot, folderName)
   });
+}
+
+if (promptInterface) {
+  promptInterface.close();
 }
