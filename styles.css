@@ -17,9 +17,8 @@
   --radius: 28px;
   --row-height: 255px;
   font-family:
-    ui-rounded, "SF Pro Rounded", "SF Pro Display", "SF Pro Text", Inter,
-    "Google Sans", "Aptos", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+    "SF Pro Display", "SF Pro Text", Inter, "Google Sans", "Aptos", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 * {
