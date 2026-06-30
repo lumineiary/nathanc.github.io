@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 export type PhotographyEntry = CollectionEntry<"photography">;
 export type DataProjectEntry = CollectionEntry<"data-projects">;
 export type ContentWorkEntry = CollectionEntry<"content-work">;
+export type PhotographyType = PhotographyEntry["data"]["photographyType"];
 
 export function published<T extends { data: { publishStatus?: string; date?: Date } }>(items: T[]) {
   return items
@@ -15,8 +16,31 @@ export function featured<T extends { data: { featured?: boolean } }>(items: T[],
   return (featuredItems.length ? featuredItems : items).slice(0, limit);
 }
 
+export function rankPhotographyForAll(items: PhotographyEntry[]) {
+  return sortByRank(items, "featuredRank");
+}
+
+export function rankPhotographyForCategory(items: PhotographyEntry[]) {
+  return sortByRank(items, "categoryRank");
+}
+
 export function galleryUrl(item: PhotographyEntry) {
   return `/photography/gallery/${entrySlug(item)}/`;
+}
+
+export function photographyTypeLabel(item: PhotographyEntry) {
+  return photographyTypeName(item.data.photographyType);
+}
+
+export function photographyTypeName(type: PhotographyType) {
+  const labels: Record<PhotographyType, string> = {
+    "corporate-private-events": "Corporate & private events",
+    "stage-work": "Stage work",
+    photoshoot: "Photoshoot",
+    "wedding-rom": "Wedding & ROM"
+  };
+
+  return labels[type] || "Photography";
 }
 
 export function projectUrl(item: DataProjectEntry) {
@@ -55,6 +79,16 @@ export function safeDate(value: unknown) {
 
 function cleanTitle(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : "";
+}
+
+function sortByRank(items: PhotographyEntry[], rankKey: "featuredRank" | "categoryRank") {
+  return items
+    .map((item, originalIndex) => ({ item, originalIndex }))
+    .sort((a, b) => {
+      const rankDifference = a.item.data[rankKey] - b.item.data[rankKey];
+      return rankDifference || a.originalIndex - b.originalIndex;
+    })
+    .map(({ item }) => item);
 }
 
 function humanizeSlug(slug: string) {

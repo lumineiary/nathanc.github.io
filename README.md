@@ -135,7 +135,7 @@ Use `corporate` for business-facing, education, training, professional, event, o
 Use `lifestyle` for people-led, creator-style, behind-the-scenes, personality, travel, daily-life, or informal brand content.
 Use `real-estate` for property, agent, developer, home-tour, or listing-adjacent content.
 
-The Social media page selects `Corporate` by default. Tab order is `Corporate`, `Lifestyle`, `Real estate`, then `All`.
+The Social media page selects `All` by default. Tab order is `All`, `Corporate`, `Lifestyle`, then `Real estate`.
 
 `title` is optional for social media items. If you leave it blank, the site uses `generatedTitle`. The AI helper can generate `generatedTitle` from `guidedContext`, captions, metrics, and other frontmatter context.
 
@@ -271,11 +271,11 @@ The text underneath the frontmatter becomes the written case-study copy. Edit th
 The photography page has these category tabs:
 
 ```text
+All
 Corporate & private events
 Stage work
 Photoshoot
 Wedding & ROM
-All
 ```
 
 Each gallery chooses its category with the `photographyType` field in `gallery.md`.
@@ -289,7 +289,7 @@ photoshoot
 wedding-rom
 ```
 
-The Photography page selects `Corporate & private events` by default. The `All` tab sits at the rightmost end and shows every published gallery in reverse date order.
+The Photography page selects `All` by default. The `All` tab shows every published gallery by `featuredRank`, and each category tab uses `categoryRank`. Lower rank numbers appear first, so `1` is top-tier and blank/missing ranks fall back to `10`.
 
 ## Magic Directory Gallery Workflow
 
@@ -315,8 +315,10 @@ If `gallery.md` is missing, or if it exists without `guidedContext`, the importe
 
 - `title`, optional but recommended
 - `context`, mandatory
+- `featuredRank`, optional input but saved with a default of `10`
+- `categoryRank`, optional input but saved with a default of `10`
 
-The context is saved as `guidedContext` and used by the AI summary system to generate the display title when no manual title is provided, plus the gallery description.
+The context is saved as `guidedContext` and used by the AI summary system to generate the display title when no manual title is provided, plus the gallery description. The rank prompt reminds you that lower numbers appear first: `1` is top-tier, while `10` is the lowest-priority default.
 
 The smallest manual `gallery.md` is:
 
@@ -324,6 +326,8 @@ The smallest manual `gallery.md` is:
 ---
 title: My Event
 photographyType: corporate-private-events
+featuredRank: 10
+categoryRank: 10
 guidedContext: "What happened, who it was for, what the gallery should communicate, and any moments or value to highlight."
 ---
 
@@ -376,6 +380,8 @@ client: Client Name
 clientVisibility: public
 featured: false
 publishStatus: published
+featuredRank: 1
+categoryRank: 1
 summary: Short card summary.
 description: Longer gallery description.
 services:
@@ -424,6 +430,12 @@ If optional metadata is missing, the site should still display the gallery where
 
 `featured`
 : Marks the gallery as eligible for featured placements.
+
+`featuredRank`
+: Controls ordering in the `All` photography view. Lower numbers appear first; use `1` for top-tier highlights. Missing or blank ranks default to `10`.
+
+`categoryRank`
+: Controls ordering inside the gallery's `photographyType` tab. Lower numbers appear first; missing or blank ranks default to `10`.
 
 `publishStatus`
 : Use `published` for live galleries. Other supported values are `draft` and `archived`.

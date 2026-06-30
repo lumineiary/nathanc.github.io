@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import JustifiedGallery from "@components/JustifiedGallery.astro";
 import WorkGrid from "@components/WorkGrid.astro";
-import { clientLabel, displayTitle, entrySlug, formatDate, published } from "@lib/content";
+import { displayTitle, entrySlug, photographyTypeLabel, published } from "@lib/content";
 import { getGalleryCover, getGalleryImages } from "@lib/gallery-images";
 
 export async function getStaticPaths() {
@@ -15,11 +15,9 @@ const { item } = Astro.props;
 const { Content } = await item.render();
 const photos = published(await getCollection("photography"));
 const related = photos.filter((photo) => entrySlug(photo) !== entrySlug(item)).slice(0, 2);
-const client = clientLabel(item);
 const slug = entrySlug(item);
 const title = displayTitle(item);
-const category = item.data.category || "Photography";
-const date = formatDate(item.data.date);
+const category = photographyTypeLabel(item);
 const galleryImages = getGalleryImages(slug, item.data.images);
 const coverImage = getGalleryCover(slug, item.data.coverImage, item.data.images);
 ---
@@ -32,12 +30,6 @@ const coverImage = getGalleryCover(slug, item.data.coverImage, item.data.images)
   </section>
 
   <section class="gallery-section">
-    <div class="gallery-meta">
-      {date && <div><span class="meta-label">Date</span><strong>{date}</strong></div>}
-      <div><span class="meta-label">Type</span><strong>{category}</strong></div>
-      {client && <div><span class="meta-label">Client</span><strong>{client}</strong></div>}
-      {!client && <div><span class="meta-label">Coverage</span><strong>{item.data.services.slice(0, 2).join(" / ") || "Curated public set"}</strong></div>}
-    </div>
     {galleryImages.length > 0 ? <JustifiedGallery title={title} images={galleryImages} /> : <p class="empty-gallery-note">No images found for this gallery yet.</p>}
     <div class="detail-body">
       <Content />

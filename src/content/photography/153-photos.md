@@ -1,12 +1,14 @@
 ---
 # photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom
 generatedTitle: Polished Corporate Event Coverage
-date: 2026-06-25
+date: 2026-06-28
 category: Photography
 section: corporate-events
 photographyType: corporate-private-events
 clientVisibility: hidden
 featured: false
+featuredRank: 2
+categoryRank: 2
 publishStatus: published
 summary: Clean, people-focused coverage gave this corporate event a polished
   visual record that felt ready for client communications and post-event

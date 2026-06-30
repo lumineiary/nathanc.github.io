@@ -17,12 +17,12 @@ const renderedItems = await Promise.all(
 );
 const normalizedCategory = (category: string) => (category === "adult-education" ? "corporate" : category);
 const categories = [
+  { id: "all", label: "All" },
   { id: "corporate", label: "Corporate" },
   { id: "lifestyle", label: "Lifestyle" },
-  { id: "real-estate", label: "Real estate" },
-  { id: "all", label: "All" }
+  { id: "real-estate", label: "Real estate" }
 ] as const;
-const defaultCategory = "corporate";
+const defaultCategory = "all";
 
 const platformLabels = {
   instagram: "Instagram",
@@ -58,7 +58,7 @@ const platformLabels = {
               class="content-embed-card"
               data-content-card
               data-category={normalizedCategory(item.data.socialCategory)}
-              hidden={normalizedCategory(item.data.socialCategory) !== defaultCategory}
+              hidden={defaultCategory !== "all" && normalizedCategory(item.data.socialCategory) !== defaultCategory}
             >
               <div class="content-embed-window">
                 {
@@ -131,7 +131,7 @@ const platformLabels = {
     const categoryFromUrl = new URLSearchParams(window.location.search).get("category") || window.location.hash.replace("#", "");
     const validCategory = contentFilterButtons.some((button) => button.dataset.contentFilter === categoryFromUrl)
       ? categoryFromUrl
-      : "corporate";
+      : "all";
     selectContentFilter(validCategory);
 
     contentFilterButtons.forEach((button) => {

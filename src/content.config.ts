@@ -48,6 +48,10 @@ const numberOptional = z.preprocess((value) => {
   const number = Number(value);
   return Number.isFinite(number) && number > 0 ? number : undefined;
 }, z.number().positive().optional());
+const rankNumber = z.preprocess((value) => {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : 10;
+}, z.number().positive().default(10));
 
 const imageSchema = z.object({
   thumb: stringOrDefault(""),
@@ -71,6 +75,8 @@ const photography = defineCollection({
     client: optionalString,
     clientVisibility,
     featured: looseBoolean.default(false),
+    featuredRank: rankNumber,
+    categoryRank: rankNumber,
     publishStatus,
     coverImage: optionalString,
     googlePhotosUrl: optionalString,

@@ -1,6 +1,6 @@
 ---
 import type { PhotographyEntry } from "@lib/content";
-import { displayTitle, entrySlug, galleryUrl } from "@lib/content";
+import { displayTitle, entrySlug, galleryUrl, photographyTypeLabel } from "@lib/content";
 import { getGalleryCover } from "@lib/gallery-images";
 
 interface Props {
@@ -12,10 +12,11 @@ const { item, large = false } = Astro.props;
 const slug = entrySlug(item);
 const cover = getGalleryCover(slug, item.data.coverImage, item.data.images);
 const title = displayTitle(item);
-const category = item.data.category || "Photography";
+const category = photographyTypeLabel(item);
 ---
 
 <a class:list={["work-card", { "large-work-card": large }]} href={galleryUrl(item)}>
+  <span class="curation-rank-badge" aria-hidden="true">F{item.data.featuredRank} · C{item.data.categoryRank}</span>
   {cover && <img src={cover} alt={title} loading="lazy" />}
   <div>
     <span class="meta-label">{category}</span>

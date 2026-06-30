@@ -1,12 +1,14 @@
 ---
 # photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom
 generatedTitle: Character Portrait Photoshoot
-date: 2026-06-25
+date: 2026-06-28
 category: Photography
 section: corporate-events
 photographyType: photoshoot
 clientVisibility: hidden
 featured: false
+featuredRank: 1
+categoryRank: 2
 publishStatus: published
 summary: A curated set of expressive portraits and costume details gives this
   gallery a clear point of view, balancing character with polish. The images

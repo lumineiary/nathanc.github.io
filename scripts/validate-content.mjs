@@ -113,6 +113,12 @@ async function validatePhotography() {
     if (gallery.data.photographyType && !allowedPhotographyTypes.includes(String(gallery.data.photographyType))) {
       warn(`Photography gallery "${gallery.file}" has invalid photographyType; corporate-private-events fallback will be used.`);
     }
+    if (!hasPositiveNumber(gallery.data.featuredRank)) {
+      warn(`Photography gallery "${gallery.file}" has no valid featuredRank; rank 10 fallback will be used.`);
+    }
+    if (!hasPositiveNumber(gallery.data.categoryRank)) {
+      warn(`Photography gallery "${gallery.file}" has no valid categoryRank; rank 10 fallback will be used.`);
+    }
 
     const images = imageCandidates(gallery);
     if (images.length === 0) {
@@ -131,6 +137,11 @@ async function validatePhotography() {
       }
     }
   }
+}
+
+function hasPositiveNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0;
 }
 
 async function validateDataProjects() {

@@ -1,12 +1,14 @@
 ---
 # photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom
 generatedTitle: Live Stage Performance Coverage
-date: 2026-06-25
+date: 2026-06-28
 category: Photography
 section: corporate-events
 photographyType: stage-work
 clientVisibility: hidden
 featured: false
+featuredRank: 1
+categoryRank: 2
 publishStatus: published
 summary: Stage energy stays intact here, with crisp timing and careful low-light
   control preserving the mood, motion, and expression of the live moment. The

@@ -1,12 +1,14 @@
 ---
 # photographyType choices: corporate-private-events | stage-work | photoshoot | wedding-rom
 title: General Assembly Women in AI event
-date: 2026-06-25
+date: 2026-06-28
 category: Photography
 section: corporate-events
 photographyType: corporate-private-events
 clientVisibility: hidden
 featured: false
+featuredRank: 1
+categoryRank: 2
 publishStatus: published
 summary: "This coverage gave the Women in AI gathering a polished, people-first
   feel that fit the event’s purpose: making an emerging topic feel open,

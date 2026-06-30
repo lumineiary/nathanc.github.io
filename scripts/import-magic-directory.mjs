@@ -66,6 +66,18 @@ async function readGalleryMarkdown(folderPath) {
     });
   }
 
+  if (!hasRank(parsed.data?.featuredRank)) {
+    return promptForGalleryMarkdown(folderPath, galleryMdPath, parsed, {
+      reason: "gallery.md exists, but it has no featuredRank."
+    });
+  }
+
+  if (!hasRank(parsed.data?.categoryRank)) {
+    return promptForGalleryMarkdown(folderPath, galleryMdPath, parsed, {
+      reason: "gallery.md exists, but it has no categoryRank."
+    });
+  }
+
   return parsed;
 }
 
@@ -76,12 +88,14 @@ async function promptForGalleryMarkdown(folderPath, galleryMdPath, parsed, { rea
   if (!input.isTTY || !output.isTTY) {
     throw new Error(
       [
-        `Gallery "${folderName}" needs mandatory context before import.`,
+        `Gallery "${folderName}" needs mandatory metadata before import.`,
         reason,
         "Run `npm run import:magic` locally in an interactive terminal so the importer can ask for details,",
         "or edit gallery.md manually with at least:",
         "---",
         "guidedContext: Your mandatory context here.",
+        "featuredRank: 10",
+        "categoryRank: 10",
         "---"
       ].join("\n")
     );
@@ -105,12 +119,18 @@ async function promptForGalleryMarkdown(folderPath, galleryMdPath, parsed, { rea
     }
   }
 
+  console.log("Rank reminder: lower numbers appear first. Use 1 for top-tier highlights; press Enter for 10, the lowest-priority default.");
+  const featuredRank = await promptForRank("Featured rank for the All view", existingData.featuredRank);
+  const categoryRank = await promptForRank("Category rank for this tab", existingData.categoryRank);
+
   const data = cleanFrontmatter({
     ...existingData,
     title: title || existingData.title || undefined,
     photographyType: existingData.photographyType || "corporate-private-events",
     publishStatus: existingData.publishStatus || "published",
-    guidedContext
+    guidedContext,
+    featuredRank,
+    categoryRank
   });
   const yaml = YAML.stringify(data).trim();
   const raw = `---\n${yaml}\n---\n\n${parsed.content.trim()}\n`;
@@ -125,6 +145,27 @@ function getPromptInterface() {
     promptInterface = createInterface({ input, output });
   }
   return promptInterface;
+}
+
+function hasRank(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0;
+}
+
+async function promptForRank(label, existingValue) {
+  if (hasRank(existingValue)) {
+    return Number(existingValue);
+  }
+
+  const prompt = getPromptInterface();
+  const answer = (await prompt.question(`${label} (lower appears first, blank = 10): `)).trim();
+  const number = Number(answer);
+
+  if (!answer) return 10;
+  if (Number.isFinite(number) && number > 0) return number;
+
+  console.log(`Invalid rank "${answer}". Using 10 as the lowest-priority default.`);
+  return 10;
 }
 
 async function readManifest(manifestPath) {
@@ -260,6 +301,8 @@ async function writeGalleryContent({ folderPath, slug, manifest }) {
     client: data.client || undefined,
     clientVisibility: data.clientVisibility || "hidden",
     featured: data.featured === true || data.featured === "true",
+    featuredRank: hasRank(data.featuredRank) ? Number(data.featuredRank) : 10,
+    categoryRank: hasRank(data.categoryRank) ? Number(data.categoryRank) : 10,
     publishStatus: data.publishStatus || "published",
     summary: data.summary || existing.data.summary || undefined,
     description: data.description || undefined,
